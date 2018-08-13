@@ -1,5 +1,5 @@
 # Sistema de Contabilização - Sprint 1
-=============
+------------------------------
 
 Na empresa PagSeuturco são recebidos arquivos que contém registros de movimentação financeira para contabilização diária.
 Esses arquivos são recebidos em formato CSV com dados separados da seguinte forma: id_movimentacao, tipo_movimentacao, 
@@ -7,14 +7,14 @@ valor_movimentacao, conta_movimentacao, data_movimentacao.
 Considerando isso, é necessário criar um sistema que separe as movimentações por "tipo de movimentação" e por "conta de movimentação"
 de forma que seja possível contabilizar quanto dinheiro entrou e quanto dinheiro saiu de determinada conta.
 
-*Critérios de aceite:*
+**Critérios de aceite:**
 - Deve ser possível indicar qual o caminho do arquivo que deve ser processado;
 - Deve ser possível eu solicitar qual o conta de movimentação eu quero visualizar os tipos de movimentação e o total dos valores;
 - Os tipos de movimentação neste momento são dédito e crédito, mas outros tipos podem ser inseridos no futuro;
 - Os valores das movimentações possuirão ponto flutuante em duas casas;
 - Deve haver testes unitário para o código;
  
-*Exemplo de conteúdo de arquivo recebido*
+**Exemplo de conteúdo de arquivo recebido**
 
 ```
 id_movimentacao;tipo_movimentacao;valor_movimentacao;conta_movimentacao;data_movimentacao
