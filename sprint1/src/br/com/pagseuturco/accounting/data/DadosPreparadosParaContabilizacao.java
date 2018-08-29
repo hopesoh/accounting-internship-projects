@@ -1,3 +1,5 @@
+package br.com.pagseuturco.accounting.data;
+
 import java.util.ArrayList;
 import java.util.Objects;
 
