@@ -1,25 +1,29 @@
-import java.io.*;
-import java.util.ArrayList;
+package br.com.pagseuturco.accounting.init;
+
+import br.com.pagseuturco.accounting.data.ContabilizacaoDeTransacoes;
+import br.com.pagseuturco.accounting.data.DadosPreparadosParaContabilizacao;
+import br.com.pagseuturco.accounting.file.FileReader;
+
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Scanner;
 
-class Main {
+public class TransactionAccount {
 
     private static final String PONTOEVIRGULA = ";";
 
-    public static void main(String[] args) throws Exception {
-        //lê arquivo csv
-        Scanner entrada = new Scanner(System.in);
-        System.out.print( "Insira o caminho do arquivo: " );
-        //no windows src/com/company/arquivo.csv
-        //no linux src/arquivo.csv
-        String arquivo = entrada.nextLine();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(arquivo)));
+    public void processFile () throws IOException {
+
+        FileReader fileReader = new FileReader();
+        BufferedReader reader = fileReader.readFile();
 
         DadosPreparadosParaContabilizacao dadosPreparados = prepareOsDadosParaContabilizacao(reader);
 
         //pede o numero da conta de movimentação
         //retorneNumeroCertoDaConta
+        Scanner entrada = new Scanner(System.in);
         System.out.print( "Insira o numero da conta: " );
         int numeroDaConta = Integer.parseInt(entrada.nextLine());
         boolean numeroCertoDaConta = retorneNumeroCertoDeConta(numeroDaConta, dadosPreparados.getContaMovimentacao());
@@ -41,7 +45,7 @@ class Main {
         reader.close();
     }
 
-    public static DadosPreparadosParaContabilizacao prepareOsDadosParaContabilizacao (BufferedReader reader) throws IOException {
+    public DadosPreparadosParaContabilizacao prepareOsDadosParaContabilizacao (BufferedReader reader) throws IOException {
         String linha = null;
         ArrayList<String> idMovimentacao = new ArrayList<>();
         ArrayList<String> tipoMovimentacao = new ArrayList<>();
@@ -62,7 +66,7 @@ class Main {
         return new DadosPreparadosParaContabilizacao(idMovimentacao, tipoMovimentacao, valorMovimentacao, contaMovimentacao);
     }
 
-    public static boolean retorneNumeroCertoDeConta(int numeroDaConta, ArrayList<String> conta) {
+    public boolean retorneNumeroCertoDeConta(int numeroDaConta, ArrayList<String> conta) {
         boolean contaInexistente = true;
         int tamanho = conta.size();
         for (int i = 1; i < tamanho; i++) {
@@ -73,7 +77,7 @@ class Main {
         return true;
     }
 
-    public static ContabilizacaoDeTransacoes contabilizeTransacoesPorTipo (
+    public ContabilizacaoDeTransacoes contabilizeTransacoesPorTipo (
             int numeroDaConta,
             ArrayList<String> tipo,
             ArrayList<String> valor,

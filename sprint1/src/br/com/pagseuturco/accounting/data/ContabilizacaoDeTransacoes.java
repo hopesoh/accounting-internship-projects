@@ -1,3 +1,5 @@
+package br.com.pagseuturco.accounting.data;
+
 import java.math.BigDecimal;
 import java.util.Objects;
 
