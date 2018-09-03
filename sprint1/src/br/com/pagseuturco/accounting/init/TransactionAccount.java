@@ -1,7 +1,7 @@
 package br.com.pagseuturco.accounting.init;
 
-import br.com.pagseuturco.accounting.data.ContabilizacaoDeTransacoes;
-import br.com.pagseuturco.accounting.data.DadosPreparadosParaContabilizacao;
+import br.com.pagseuturco.accounting.data.TransactionsAccounting;
+import br.com.pagseuturco.accounting.data.Turnover;
 import br.com.pagseuturco.accounting.file.FileReader;
 
 import java.io.BufferedReader;
@@ -12,93 +12,84 @@ import java.util.Scanner;
 
 public class TransactionAccount {
 
-    private static final String PONTOEVIRGULA = ";";
+    private static final String SEMICOLON = ";";
+    private static final String HEADER = "id_movimentacao;tipo_movimentacao;valor_movimentacao;conta_movimentacao;data_movimentacao";
 
     public void processFile () throws IOException {
 
         FileReader fileReader = new FileReader();
         BufferedReader reader = fileReader.readFile();
 
-        DadosPreparadosParaContabilizacao dadosPreparados = prepareOsDadosParaContabilizacao(reader);
+        ArrayList<Turnover> turnoverList = transformIntoTurnoverList(reader);
 
-        //pede o numero da conta de movimentação
-        //retorneNumeroCertoDaConta
-        Scanner entrada = new Scanner(System.in);
+        Scanner input = new Scanner(System.in);
         System.out.print( "Insira o numero da conta: " );
-        int numeroDaConta = Integer.parseInt(entrada.nextLine());
-        boolean numeroCertoDaConta = retorneNumeroCertoDeConta(numeroDaConta, dadosPreparados.getContaMovimentacao());
-        while (numeroCertoDaConta) {
-            if (numeroCertoDaConta) {
-                System.out.println("Esse número de conta não existe.");
-                System.out.print("Entre com um numero de conta válido: ");
-                numeroDaConta = Integer.parseInt(entrada.nextLine());
-                numeroCertoDaConta = retorneNumeroCertoDeConta(numeroDaConta, dadosPreparados.getContaMovimentacao());
-            }
+        int accountNumber = Integer.parseInt(input.nextLine());
+
+        while (accountNumberDoesntExistInTurnoverArray(accountNumber, turnoverList)) {
+            System.out.println("Esse número de conta não existe.");
+            System.out.print("Entre com um numero de conta válido: ");
+            accountNumber = Integer.parseInt(input.nextLine());
         }
 
-        ContabilizacaoDeTransacoes contabilizacaoDeTransacoes = contabilizeTransacoesPorTipo(numeroDaConta,
-                dadosPreparados.getTipoMovimentacao(),
-                dadosPreparados.getValorMovimentacao(),
-                dadosPreparados.getContaMovimentacao());
-        System.out.println("A soma dos valores de Débito é: " + contabilizacaoDeTransacoes.getValorContabilizadoDeDebito());
-        System.out.println("A soma dos valores de Crédito é: "+ contabilizacaoDeTransacoes.getValorContabilizadoDeCredito());
+        TransactionsAccounting transactionsAccounting = accountTransactionsByType(turnoverList, accountNumber);
+        System.out.println("A soma dos valores de Débito é: " + transactionsAccounting.getDabitValue());
+        System.out.println("A soma dos valores de Crédito é: "+ transactionsAccounting.getCreditValue());
         reader.close();
     }
 
-    public DadosPreparadosParaContabilizacao prepareOsDadosParaContabilizacao (BufferedReader reader) throws IOException {
-        String linha = null;
-        ArrayList<String> idMovimentacao = new ArrayList<>();
-        ArrayList<String> tipoMovimentacao = new ArrayList<>();
-        ArrayList<String> valorMovimentacao = new ArrayList<>();
-        ArrayList<String> contaMovimentacao = new ArrayList<>();
+    public ArrayList<Turnover> transformIntoTurnoverList(BufferedReader reader) throws IOException {
 
-        while ((linha = reader.readLine()) != null) {
-            String[] tipoDePagamento = linha.split(PONTOEVIRGULA);
-            if (tipoDePagamento.length == 0) {
+        String fileLine = null;
+        ArrayList<Turnover> turnoverArrayList = new ArrayList<Turnover>();
+
+
+        while ((fileLine = reader.readLine()) != null) {
+
+            if (fileLine.equals(HEADER)) {
+                continue;
+            }
+
+            String[] splittedLine = fileLine.split(SEMICOLON, -1);
+
+            if (splittedLine.length == 0) {
                 return null;
             }
-            idMovimentacao.add(tipoDePagamento[0]);
-            tipoMovimentacao.add(tipoDePagamento[1]);
-            valorMovimentacao.add(tipoDePagamento[2]);
-            contaMovimentacao.add(tipoDePagamento[3]);
+
+            Turnover turnover = new Turnover(splittedLine);
+            turnoverArrayList.add(turnover);
         }
 
-        return new DadosPreparadosParaContabilizacao(idMovimentacao, tipoMovimentacao, valorMovimentacao, contaMovimentacao);
+        return turnoverArrayList;
     }
 
-    public boolean retorneNumeroCertoDeConta(int numeroDaConta, ArrayList<String> conta) {
-        boolean contaInexistente = true;
-        int tamanho = conta.size();
-        for (int i = 1; i < tamanho; i++) {
-            if (numeroDaConta == Integer.parseInt(conta.get(i))) {
+    public boolean accountNumberDoesntExistInTurnoverArray (int accountNumber, ArrayList<Turnover> turnoverArrayList) {
+
+        for (Turnover turnover : turnoverArrayList) {
+            if (accountNumber == turnover.getAccount()) {
                 return false;
             }
         }
+
         return true;
     }
 
-    public ContabilizacaoDeTransacoes contabilizeTransacoesPorTipo (
-            int numeroDaConta,
-            ArrayList<String> tipo,
-            ArrayList<String> valor,
-            ArrayList<String> conta
-    ) {
-        int i;
-        BigDecimal somaDebito = new BigDecimal(0);
-        BigDecimal somaCredito = new BigDecimal(0);
-        int tamanho = conta.size();
-        for (i=1; i<tamanho; i++) {
-            int num = Integer.parseInt(conta.get(i));
-            if (numeroDaConta == num) {
-                BigDecimal valorNaFormaBigDecimal = new BigDecimal(valor.get(i));
-                if (tipo.get(i).equals("CREDITO")) {
-                    somaCredito = somaCredito.add(valorNaFormaBigDecimal);
+    public TransactionsAccounting accountTransactionsByType(ArrayList<Turnover> turnoverArrayList, int accountNumber) {
+
+        BigDecimal debitSum = new BigDecimal(0);
+        BigDecimal creditSum = new BigDecimal(0);
+
+        for (Turnover turnover : turnoverArrayList) {
+            if (accountNumber == turnover.getAccount()) {
+                if (turnover.getType().equals("CREDITO")) {
+                    creditSum = creditSum.add(turnover.getValue());
                 }
-                if (tipo.get(i).equals("DEBITO")) {
-                    somaDebito = somaDebito.add(valorNaFormaBigDecimal);
+                if (turnover.getType().equals("DEBITO")) {
+                    debitSum = debitSum.add(turnover.getValue());
                 }
             }
-        }
-        return new ContabilizacaoDeTransacoes(somaCredito, somaDebito);
+         }
+
+        return new TransactionsAccounting(creditSum, debitSum);
     }
 }
