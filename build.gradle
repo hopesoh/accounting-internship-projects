@@ -1,0 +1,28 @@
+/**
+* Este arquivo é reposnsável por falar como deve ser gerenciado o ciclo de vida do projeto.
+* É o principal arquivo do gradle e pode ser configurado de diversas formas para atender a necessidade do projeto
+* Para saber mais: https://gradle.org/
+**/
+apply plugin: 'java'
+
+version = '1.0'
+
+ext{ // Define uma variável para o build.gradle
+	classname = 'br.com.pagseuturco.accounting.init.Main'
+}
+
+repositories { // Indica em quais repositorios o deve ser buscado as bibliotecas (@see - https://mvnrepository.com/)
+    mavenCentral()
+}
+
+dependencies { // Define quais as dependencias de biblioteca o projeto utiliza
+	testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+jar { //Define como o jar será implementado
+	manifest {
+		attributes 'Implementation-Title': 'Gradle Quickstart',
+                   'Implementation-Version': version,
+                   'Main-Class': classname
+	}
+}
