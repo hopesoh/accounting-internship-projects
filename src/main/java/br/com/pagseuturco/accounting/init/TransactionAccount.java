@@ -1,52 +1,68 @@
 package br.com.pagseuturco.accounting.init;
 
-import br.com.pagseuturco.accounting.data.TransactionsAccounting;
+import br.com.pagseuturco.accounting.data.FinancialTurnoverFactory;
 import br.com.pagseuturco.accounting.data.Turnover;
 import br.com.pagseuturco.accounting.file.FileReader;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class TransactionAccount {
 
     private static final String SEMICOLON = ";";
-    private static final String HEADER = "id_movimentacao;tipo_movimentacao;valor_movimentacao;conta_movimentacao;data_movimentacao";
+    private static final String BOOKLET_HEADER = "numero_documento; nome_emissor;identificacao_emissor;valor_documento;conta;data_recebimento";
+    private static final String GENNERICCARD_HEADER = "hash_cartao;tipo_transacao;valor;conta;data_transacao";
+    private static final String TRANSFER_HEADER = "tipo;valor;conta;data_transacao";
+    private static final String HEADER = "tipo_movimentacao;valor_movimentacao;conta;data_transacao";
 
     public void processFile () throws IOException {
 
         FileReader fileReader = new FileReader();
         BufferedReader reader = fileReader.readFile();
 
-        ArrayList<Turnover> turnoverList = transformIntoTurnoverList(reader);
+        ArrayList<String> fileIntoList = transformFileIntoList(reader);
+        String turnoverType = identifyTurnoverByType(fileIntoList.get(0));
 
-        Scanner input = new Scanner(System.in);
-        System.out.print( "Insira o numero da conta: " );
-        int accountNumber = Integer.parseInt(input.nextLine());
+        ArrayList<Turnover> turnoverList = transformIntoTurnoverList(turnoverType, reader, fileIntoList.get(0));
 
-        while (accountNumberDoesntExistInTurnoverArray(accountNumber, turnoverList)) {
-            System.out.println("Esse número de conta não existe.");
-            System.out.print("Entre com um numero de conta válido: ");
-            accountNumber = Integer.parseInt(input.nextLine());
-        }
-
-        TransactionsAccounting transactionsAccounting = accountTransactionsByType(turnoverList, accountNumber);
-        System.out.println("A soma dos valores de Débito é: " + transactionsAccounting.getDabitValue());
-        System.out.println("A soma dos valores de Crédito é: "+ transactionsAccounting.getCreditValue());
         reader.close();
     }
 
-    public ArrayList<Turnover> transformIntoTurnoverList(BufferedReader reader) throws IOException {
+    public ArrayList<String> transformFileIntoList(BufferedReader reader) throws IOException {
+
+        String fileLine = null;
+        ArrayList<String> turnoverArrayList = new ArrayList<String>();
+
+
+        while ((fileLine = reader.readLine()) != null) {
+            turnoverArrayList.add(fileLine);
+        }
+
+        return turnoverArrayList;
+    }
+
+    public String identifyTurnoverByType(String header) {
+        switch (header) {
+            case BOOKLET_HEADER:
+                return "BOOKLET";
+            case GENNERICCARD_HEADER:
+                return "GENNERICCARD";
+            case TRANSFER_HEADER:
+                return "TRANSFER";
+            default:
+                return null;
+        }
+    }
+
+    public ArrayList<Turnover> transformIntoTurnoverList(String turnoverType, BufferedReader reader, String header) throws IOException {
 
         String fileLine = null;
         ArrayList<Turnover> turnoverArrayList = new ArrayList<Turnover>();
 
-
         while ((fileLine = reader.readLine()) != null) {
 
-            if (fileLine.equals(HEADER)) {
+            if (fileLine.equals(header)) {
                 continue;
             }
 
@@ -56,40 +72,11 @@ public class TransactionAccount {
                 return null;
             }
 
-            Turnover turnover = new Turnover(splittedLine);
-            turnoverArrayList.add(turnover);
+            FinancialTurnoverFactory financialTurnoverFactory = new FinancialTurnoverFactory();
+            Turnover financialTurnover = financialTurnoverFactory.build(turnoverType,splittedLine);
+            turnoverArrayList.add(financialTurnover);
         }
 
         return turnoverArrayList;
-    }
-
-    public boolean accountNumberDoesntExistInTurnoverArray (int accountNumber, ArrayList<Turnover> turnoverArrayList) {
-
-        for (Turnover turnover : turnoverArrayList) {
-            if (accountNumber == turnover.getAccount()) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    public TransactionsAccounting accountTransactionsByType(ArrayList<Turnover> turnoverArrayList, int accountNumber) {
-
-        BigDecimal debitSum = new BigDecimal(0);
-        BigDecimal creditSum = new BigDecimal(0);
-
-        for (Turnover turnover : turnoverArrayList) {
-            if (accountNumber == turnover.getAccount()) {
-                if (turnover.getType().equals("CREDITO")) {
-                    creditSum = creditSum.add(turnover.getValue());
-                }
-                if (turnover.getType().equals("DEBITO")) {
-                    debitSum = debitSum.add(turnover.getValue());
-                }
-            }
-         }
-
-        return new TransactionsAccounting(creditSum, debitSum);
     }
 }
