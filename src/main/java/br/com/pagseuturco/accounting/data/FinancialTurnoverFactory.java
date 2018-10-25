@@ -1,10 +1,9 @@
 package br.com.pagseuturco.accounting.data;
 
+import java.sql.SQLException;
+
 public class FinancialTurnoverFactory {
-    public Turnover build(String turnoverType, String[] splittedLine) {
-        if (turnoverType == null || splittedLine == null) {
-            return null;
-        } else {
+    public Turnover build(String turnoverType, String[] splittedLine) throws SQLException, ClassNotFoundException {
             switch (turnoverType) {
                 case "BOOKLET":
                     return new FinancialTurnoverBooklet(splittedLine);
@@ -13,10 +12,8 @@ public class FinancialTurnoverFactory {
                 case "TRANSFER":
                     return new FinancialTurnoverTransfer(splittedLine);
                 default:
-                    return null;
-
+                    throw new IllegalArgumentException();
             }
-        }
 
     }
 }

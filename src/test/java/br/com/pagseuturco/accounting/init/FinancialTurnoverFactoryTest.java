@@ -7,13 +7,14 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
 
 public class FinancialTurnoverFactoryTest {
     @Test
-    public void buildFinancialTurnoverTransferType() {
+    public void buildFinancialTurnoverTransferType() throws SQLException, ClassNotFoundException {
         String turnoverType = "TRANSFER";
         String[] splittedLine = new String[4];
         splittedLine[0] = "DEBITO";
@@ -27,7 +28,7 @@ public class FinancialTurnoverFactoryTest {
     }
 
     @Test
-    public void buildFinancialTurnoverTransferTypeMissingAccountField() {
+    public void buildFinancialTurnoverTransferTypeMissingAccountField() throws SQLException, ClassNotFoundException {
         String turnoverType = "TRANSFER";
         String[] splittedLine = new String[4];
         splittedLine[0] = "DEBITO";
@@ -41,7 +42,7 @@ public class FinancialTurnoverFactoryTest {
     }
 
     @Test
-    public void buildFinancialTurnoverTransferTypeMissingAllFields() {
+    public void buildFinancialTurnoverTransferTypeMissingAllFields() throws SQLException, ClassNotFoundException {
         String turnoverType = "TRANSFER";
         String[] splittedLine = new String[4];
         splittedLine[0] = "";
@@ -54,8 +55,8 @@ public class FinancialTurnoverFactoryTest {
         assertEquals(financialTurnoverTransfer, financialTurnoverFactory.build(turnoverType, splittedLine));
     }
 
-    @Test
-    public void buildFinancialTurnoverTransferTypeNullCase() {
+    @Test(expected = NullPointerException.class)
+    public void buildFinancialTurnoverTransferTypeNullCase() throws SQLException, ClassNotFoundException {
         String turnoverType = null;
         String[] splittedLine = new String[4];
         splittedLine[0] = "DEBITO";
@@ -67,8 +68,8 @@ public class FinancialTurnoverFactoryTest {
         assertEquals(null, financialTurnoverFactory.build(null, splittedLine));
     }
 
-    @Test
-    public void buildFinancialTurnoverTransferTypeSplittedLineNullCase() {
+    @Test(expected = NullPointerException.class)
+    public void buildFinancialTurnoverTransferTypeSplittedLineNullCase() throws SQLException, ClassNotFoundException {
         String turnoverType = "TRANSFER";
         String[] splittedLine = null;
         FinancialTurnoverFactory financialTurnoverFactory = new FinancialTurnoverFactory();

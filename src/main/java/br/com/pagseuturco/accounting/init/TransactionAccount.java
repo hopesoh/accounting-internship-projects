@@ -6,7 +6,9 @@ import br.com.pagseuturco.accounting.file.FileReader;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class TransactionAccount {
 
@@ -14,17 +16,16 @@ public class TransactionAccount {
     private static final String BOOKLET_HEADER = "numero_documento; nome_emissor;identificacao_emissor;valor_documento;conta;data_recebimento";
     private static final String GENNERICCARD_HEADER = "hash_cartao;tipo_transacao;valor;conta;data_transacao";
     private static final String TRANSFER_HEADER = "tipo;valor;conta;data_transacao";
-    private static final String HEADER = "tipo_movimentacao;valor_movimentacao;conta;data_transacao";
 
-    public void processFile () throws IOException {
+    public void processFile () throws IOException, SQLException, ClassNotFoundException {
 
         FileReader fileReader = new FileReader();
         BufferedReader reader = fileReader.readFile();
 
-        ArrayList<String> fileIntoList = transformFileIntoList(reader);
+        List<String> fileIntoList = transformFileIntoList(reader);
         String turnoverType = identifyTurnoverByType(fileIntoList.get(0));
 
-        ArrayList<Turnover> turnoverList = transformIntoTurnoverList(turnoverType, reader, fileIntoList.get(0));
+        List<Turnover> turnoverList = transformIntoTurnoverList(turnoverType, fileIntoList);
 
         reader.close();
     }
@@ -55,17 +56,14 @@ public class TransactionAccount {
         }
     }
 
-    public ArrayList<Turnover> transformIntoTurnoverList(String turnoverType, BufferedReader reader, String header) throws IOException {
+    public ArrayList<Turnover> transformIntoTurnoverList(String turnoverType, List<String> fileLines) throws IOException, SQLException, ClassNotFoundException {
 
-        String fileLine = null;
+
         ArrayList<Turnover> turnoverArrayList = new ArrayList<Turnover>();
 
-        while ((fileLine = reader.readLine()) != null) {
+        for (int index=1; index < fileLines.size(); index++ ) {
 
-            if (fileLine.equals(header)) {
-                continue;
-            }
-
+            String fileLine = fileLines.get(index);
             String[] splittedLine = fileLine.split(SEMICOLON, -1);
 
             if (splittedLine.length == 0) {

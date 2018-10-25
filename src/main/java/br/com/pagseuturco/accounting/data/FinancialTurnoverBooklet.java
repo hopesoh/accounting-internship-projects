@@ -5,21 +5,17 @@ import java.util.Objects;
 import java.sql.*;
 
 public class FinancialTurnoverBooklet implements Turnover {
-    private Integer documentNumber;
+    private static final BigDecimal BOOKLET_TAX = new BigDecimal(0.25);
+    private String documentNumber;
     private String name;
-    private Integer id;
     private BigDecimal value;
     private Integer account;
     private String date;
+    private String id;
 
-    public FinancialTurnoverBooklet(String[] splittedLine) {
-        if(!splittedLine[0].isEmpty()) {
-            documentNumber = Integer.parseInt(splittedLine[0]);
-        }
+    public FinancialTurnoverBooklet(String[] splittedLine) throws SQLException, ClassNotFoundException {
+        documentNumber = splittedLine[0];
         name = splittedLine[1];
-        if (!splittedLine[2].isEmpty()) {
-            id = Integer.parseInt(splittedLine[2]);
-        }
         if (!splittedLine[3].isEmpty()) {
             value = new BigDecimal(splittedLine[3]);
         }
@@ -27,6 +23,9 @@ public class FinancialTurnoverBooklet implements Turnover {
             account = Integer.parseInt(splittedLine[4]);
         }
         date = splittedLine[5];
+        id = splittedLine[2];
+
+        process(name, value, account, date);
     }
 
     @Override
@@ -44,9 +43,31 @@ public class FinancialTurnoverBooklet implements Turnover {
         return value;
     }
 
-    @Override
-    public void process() {
+    public void process(String name, BigDecimal value, Integer account, String date) throws SQLException, ClassNotFoundException {
+        Connection connect = null;
+        Statement statement = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
 
+        BigDecimal newBookletValue = value.subtract(BOOKLET_TAX);
+
+        try {
+
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            connect = DriverManager.getConnection("jdbc:mysql://localhost/financial_turnover?"
+                    + "user=sqluser&password=sqluserpw");
+
+            preparedStatement = connect.prepareStatement("insert into financial_turnover.booklet values(default,?,?,?,?)");
+            preparedStatement.setInt(1, account);
+            preparedStatement.setBigDecimal(2, newBookletValue);
+            preparedStatement.setString(3, name);
+            preparedStatement.setString(4, date);
+            preparedStatement.executeUpdate();
+
+
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
     @Override
@@ -54,9 +75,7 @@ public class FinancialTurnoverBooklet implements Turnover {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         FinancialTurnoverBooklet turnover = (FinancialTurnoverBooklet) obj;
-        return Objects.equals(documentNumber, turnover.documentNumber) &&
-                Objects.equals(name, turnover.name) &&
-                Objects.equals(id, turnover.id) &&
+        return Objects.equals(name, turnover.name) &&
                 Objects.equals(value, turnover.value) &&
                 Objects.equals(account, turnover.account) &&
                 Objects.equals(date, turnover.date);
@@ -64,6 +83,6 @@ public class FinancialTurnoverBooklet implements Turnover {
 
     @Override
     public int hashCode() {
-        return Objects.hash(documentNumber, name, id, value, account, date);
+        return Objects.hash(name, value, account, date);
     }
 }

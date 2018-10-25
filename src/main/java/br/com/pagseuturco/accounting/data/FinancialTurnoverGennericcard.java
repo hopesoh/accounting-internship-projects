@@ -21,6 +21,8 @@ public class FinancialTurnoverGennericcard implements Turnover {
             account = Integer.parseInt(splittedLine[3]);
         }
         date = splittedLine[4];
+
+
     }
 
     @Override
@@ -38,7 +40,6 @@ public class FinancialTurnoverGennericcard implements Turnover {
         return value;
     }
 
-    @Override
     public void process() {
 
     }

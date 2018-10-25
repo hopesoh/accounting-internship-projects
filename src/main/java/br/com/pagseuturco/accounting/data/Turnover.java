@@ -17,6 +17,4 @@ public interface Turnover {
 
     public BigDecimal getValue();
 
-    public void process();
-
 }
