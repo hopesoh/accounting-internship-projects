@@ -27,7 +27,7 @@ public class FinancialTurnoverFactoryTest {
         assertEquals(financialTurnoverTransfer, financialTurnoverFactory.build(turnoverType, splittedLine));
     }
 
-    @Test
+    @Test(expected = NullPointerException.class)
     public void buildFinancialTurnoverTransferTypeMissingAccountField() throws SQLException, ClassNotFoundException {
         String turnoverType = "TRANSFER";
         String[] splittedLine = new String[4];
@@ -41,7 +41,7 @@ public class FinancialTurnoverFactoryTest {
         assertEquals(financialTurnoverTransfer, financialTurnoverFactory.build(turnoverType, splittedLine));
     }
 
-    @Test
+    @Test(expected = NullPointerException.class)
     public void buildFinancialTurnoverTransferTypeMissingAllFields() throws SQLException, ClassNotFoundException {
         String turnoverType = "TRANSFER";
         String[] splittedLine = new String[4];

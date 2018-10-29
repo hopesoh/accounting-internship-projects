@@ -71,7 +71,7 @@ public class TransactionAccount {
             }
 
             FinancialTurnoverFactory financialTurnoverFactory = new FinancialTurnoverFactory();
-            Turnover financialTurnover = financialTurnoverFactory.build(turnoverType,splittedLine);
+            Turnover financialTurnover = financialTurnoverFactory.build(turnoverType, splittedLine);
             turnoverArrayList.add(financialTurnover);
         }
 

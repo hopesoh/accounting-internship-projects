@@ -11,6 +11,7 @@ import java.io.StringReader;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
@@ -50,67 +51,67 @@ public class TransactionAccountTest {
         assertEquals(null, account.identifyTurnoverByType(transferHeader));
     }
 
-//    @Test
-//    public void transformIntoTurnoverListAllFieldsComplete() throws IOException, SQLException, ClassNotFoundException {
-//        BufferedReader reader = new BufferedReader(new StringReader("tipo;valor;conta;data_transacao\n" +
-//                "DEBITO;130.55;101;15/08/2018"));
-//        String turnoverType = "TRANSFER";
-//        String header = "tipo;valor;conta;data_transacao";
-//        TransactionAccount account = new TransactionAccount();
-//
-//        ArrayList<Turnover> expectedData = new ArrayList<Turnover>();
-//        String[] splittedLine = new String[4];
-//        splittedLine[0] = "DEBITO";
-//        splittedLine[1] = "130.55";
-//        splittedLine[2] = "101";
-//        splittedLine[3] = "15/08/2018";
-//        FinancialTurnoverFactory financialTurnoverFactory = new FinancialTurnoverFactory();
-//        Turnover financialTurnover = financialTurnoverFactory.build(turnoverType,splittedLine);
-//        expectedData.add(financialTurnover);
-//
-//        assertEquals(expectedData, account.transformIntoTurnoverList(turnoverType, reader, header));
-//    }
-//
-//    @Test
-//    public void transformIntoTurnoverListMissingAccountField() throws IOException, SQLException, ClassNotFoundException {
-//        BufferedReader reader = new BufferedReader(new StringReader("tipo;valor;conta;data_transacao\n" +
-//                "DEBITO;130.55;;15/08/2018"));
-//        String turnoverType = "TRANSFER";
-//        String header = "tipo;valor;conta;data_transacao";
-//        TransactionAccount account = new TransactionAccount();
-//
-//        ArrayList<Turnover> expectedData = new ArrayList<Turnover>();
-//        String[] splittedLine = new String[4];
-//        splittedLine[0] = "DEBITO";
-//        splittedLine[1] = "130.55";
-//        splittedLine[2] = "";
-//        splittedLine[3] = "15/08/2018";
-//        FinancialTurnoverFactory financialTurnoverFactory = new FinancialTurnoverFactory();
-//        Turnover financialTurnover = financialTurnoverFactory.build(turnoverType,splittedLine);
-//        expectedData.add(financialTurnover);
-//
-//        assertEquals(expectedData, account.transformIntoTurnoverList(turnoverType, reader, header));
-//    }
-//
-//    @Test
-//    public void transformIntoTurnoverListMissingAllFields() throws IOException {
-//        BufferedReader reader = new BufferedReader(new StringReader("tipo;valor;conta;data_transacao\n" +
-//                ";;;"));
-//        String turnoverType = "TRANSFER";
-//        String header = "tipo;valor;conta;data_transacao";
-//        TransactionAccount account = new TransactionAccount();
-//
-//        ArrayList<Turnover> expectedData = new ArrayList<Turnover>();
-//        String[] splittedLine = new String[4];
-//        splittedLine[0] = "";
-//        splittedLine[1] = "";
-//        splittedLine[2] = "";
-//        splittedLine[3] = "";
-//        FinancialTurnoverFactory financialTurnoverFactory = new FinancialTurnoverFactory();
-//        Turnover financialTurnover = financialTurnoverFactory.build(turnoverType,splittedLine);
-//        expectedData.add(financialTurnover);
-//
-//        assertEquals(expectedData, account.transformIntoTurnoverList(turnoverType, reader, header));
-//    }
+    @Test
+    public void transformIntoTurnoverListAllFieldsComplete() throws IOException, SQLException, ClassNotFoundException {
+        List<String> financialTurnoverDocument = new ArrayList<>();
+        financialTurnoverDocument.add("tipo;valor;conta;data_transacao\n");
+        financialTurnoverDocument.add("DEBITO;130.55;101;15/08/2018");
+        String turnoverType = "TRANSFER";
+        TransactionAccount account = new TransactionAccount();
+
+        List<Turnover> expectedData = new ArrayList<Turnover>();
+        String[] splittedLine = new String[4];
+        splittedLine[0] = "DEBITO";
+        splittedLine[1] = "130.55";
+        splittedLine[2] = "101";
+        splittedLine[3] = "15/08/2018";
+        FinancialTurnoverFactory financialTurnoverFactory = new FinancialTurnoverFactory();
+        Turnover financialTurnover = financialTurnoverFactory.build(turnoverType,splittedLine);
+        expectedData.add(financialTurnover);
+
+        assertEquals(expectedData, account.transformIntoTurnoverList(turnoverType, financialTurnoverDocument));
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void transformIntoTurnoverListMissingAccountField() throws IOException, SQLException, ClassNotFoundException {
+        List<String> financialTurnoverDocument = new ArrayList<>();
+        financialTurnoverDocument.add("tipo;valor;conta;data_transacao\n");
+        financialTurnoverDocument.add("DEBITO;130.55;;15/08/2018");
+        String turnoverType = "TRANSFER";
+        TransactionAccount account = new TransactionAccount();
+
+        List<Turnover> expectedData = new ArrayList<Turnover>();
+        String[] splittedLine = new String[4];
+        splittedLine[0] = "DEBITO";
+        splittedLine[1] = "130.55";
+        splittedLine[2] = "";
+        splittedLine[3] = "15/08/2018";
+        FinancialTurnoverFactory financialTurnoverFactory = new FinancialTurnoverFactory();
+        Turnover financialTurnover = financialTurnoverFactory.build(turnoverType,splittedLine);
+        expectedData.add(financialTurnover);
+
+        assertEquals(expectedData, account.transformIntoTurnoverList(turnoverType, financialTurnoverDocument));
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void transformIntoTurnoverListMissingAllFields() throws IOException, SQLException, ClassNotFoundException {
+        List<String> financialTurnoverDocument = new ArrayList<>();
+        financialTurnoverDocument.add("tipo;valor;conta;data_transacao\n");
+        financialTurnoverDocument.add(";;;");
+        String turnoverType = "TRANSFER";
+        TransactionAccount account = new TransactionAccount();
+
+        List<Turnover> expectedData = new ArrayList<Turnover>();
+        String[] splittedLine = new String[4];
+        splittedLine[0] = "";
+        splittedLine[1] = "";
+        splittedLine[2] = "";
+        splittedLine[3] = "";
+        FinancialTurnoverFactory financialTurnoverFactory = new FinancialTurnoverFactory();
+        Turnover financialTurnover = financialTurnoverFactory.build(turnoverType,splittedLine);
+        expectedData.add(financialTurnover);
+
+        assertEquals(expectedData, account.transformIntoTurnoverList(turnoverType, financialTurnoverDocument));
+    }
 
 }

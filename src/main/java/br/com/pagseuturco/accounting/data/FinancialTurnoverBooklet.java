@@ -1,6 +1,7 @@
 package br.com.pagseuturco.accounting.data;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Objects;
 import java.sql.*;
 
@@ -49,7 +50,7 @@ public class FinancialTurnoverBooklet implements Turnover {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
 
-        BigDecimal newBookletValue = value.subtract(BOOKLET_TAX);
+        BigDecimal bookletValueSubtractTax = value.subtract(BOOKLET_TAX);
 
         try {
 
@@ -59,8 +60,15 @@ public class FinancialTurnoverBooklet implements Turnover {
 
             preparedStatement = connect.prepareStatement("insert into financial_turnover.booklet values(default,?,?,?,?)");
             preparedStatement.setInt(1, account);
-            preparedStatement.setBigDecimal(2, newBookletValue);
+            preparedStatement.setBigDecimal(2, bookletValueSubtractTax);
             preparedStatement.setString(3, name);
+            preparedStatement.setString(4, date);
+            preparedStatement.executeUpdate();
+
+            preparedStatement = connect.prepareStatement("insert into financial_turnover.pagseuturco_account values(default,?,?,?,?)");
+            preparedStatement.setInt(1, account);
+            preparedStatement.setBigDecimal(2, BOOKLET_TAX);
+            preparedStatement.setString(3, "Booklet");
             preparedStatement.setString(4, date);
             preparedStatement.executeUpdate();
 

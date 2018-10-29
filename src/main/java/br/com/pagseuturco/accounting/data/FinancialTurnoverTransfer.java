@@ -1,6 +1,7 @@
 package br.com.pagseuturco.accounting.data;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Objects;
 import java.sql.*;
 import java.util.logging.Level;
@@ -58,7 +59,6 @@ public class FinancialTurnoverTransfer implements Turnover {
             preparedStatement.setString(3,type);
             preparedStatement.setString(4,date);
             preparedStatement.executeUpdate();
-
 
         } catch (Exception e) {
             throw e;
