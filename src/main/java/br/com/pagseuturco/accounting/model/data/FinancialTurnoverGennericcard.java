@@ -1,4 +1,4 @@
-package br.com.pagseuturco.accounting.data;
+package br.com.pagseuturco.accounting.model.data;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -13,6 +13,7 @@ public class FinancialTurnoverGennericcard implements Turnover {
     private BigDecimal value;
     private Integer account;
     private String date;
+    private String turnoverType = "GENNERICCARD";
 
     public FinancialTurnoverGennericcard(String[] splittedLine) throws SQLException, ClassNotFoundException {
         cardsHash = splittedLine[0];
@@ -39,6 +40,11 @@ public class FinancialTurnoverGennericcard implements Turnover {
     }
 
     @Override
+    public String getType() {
+        return turnoverType;
+    }
+
+    @Override
     public BigDecimal getValue() {
         return value;
     }
@@ -52,30 +58,7 @@ public class FinancialTurnoverGennericcard implements Turnover {
         BigDecimal valueToAccountNumberOne = calculateTaxByTransactionType(type, value);
         BigDecimal gennericcardValueSubtractTax = value.subtract(valueToAccountNumberOne);
 
-        try {
 
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            connect = DriverManager.getConnection("jdbc:mysql://localhost/financial_turnover?"
-                    + "user=sqluser&password=sqluserpw");
-
-            preparedStatement = connect.prepareStatement("insert into financial_turnover.gennericcard values(default,?,?,?,?)");
-            preparedStatement.setInt(1, account);
-            preparedStatement.setBigDecimal(2, gennericcardValueSubtractTax.setScale(2, RoundingMode.DOWN));
-            preparedStatement.setString(3, type);
-            preparedStatement.setString(4, date);
-            preparedStatement.executeUpdate();
-
-            preparedStatement = connect.prepareStatement("insert into financial_turnover.pagseuturco_account values(default,?,?,?,?)");
-            preparedStatement.setInt(1,account);
-            preparedStatement.setBigDecimal(2,valueToAccountNumberOne.setScale(2, RoundingMode.DOWN));
-            preparedStatement.setString(3, "Gennericard");
-            preparedStatement.setString(4, date);
-            preparedStatement.executeUpdate();
-
-
-        } catch (Exception e) {
-            throw e;
-        }
     }
 
     public BigDecimal calculateTaxByTransactionType(String type, BigDecimal value) {

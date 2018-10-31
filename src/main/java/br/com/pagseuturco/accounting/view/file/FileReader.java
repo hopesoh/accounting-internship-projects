@@ -1,10 +1,10 @@
-package br.com.pagseuturco.accounting.file;
+package br.com.pagseuturco.accounting.view.file;
 
 import java.io.*;
 import java.util.Scanner;
 
 public class FileReader {
-    public BufferedReader readFile () throws FileNotFoundException {
+    public Reader readFile () throws FileNotFoundException {
         Scanner input = new Scanner(System.in);
         System.out.print( "Insira o caminho do arquivo: " );
         String filePath = input.nextLine();

@@ -1,11 +1,12 @@
-package br.com.pagseuturco.accounting.init;
+package br.com.pagseuturco.accounting.view.init;
 
-import br.com.pagseuturco.accounting.data.FinancialTurnoverFactory;
-import br.com.pagseuturco.accounting.data.Turnover;
-import br.com.pagseuturco.accounting.file.FileReader;
+import br.com.pagseuturco.accounting.model.data.FinancialTurnoverFactory;
+import br.com.pagseuturco.accounting.model.data.Turnover;
+import br.com.pagseuturco.accounting.view.file.FileReader;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.Reader;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,26 +18,20 @@ public class TransactionAccount {
     private static final String GENNERICCARD_HEADER = "hash_cartao;tipo_transacao;valor;conta;data_transacao";
     private static final String TRANSFER_HEADER = "tipo;valor;conta;data_transacao";
 
-    public void processFile () throws IOException, SQLException, ClassNotFoundException {
+    public List<Turnover> processFile(List<String> fileIntoList) throws IOException, SQLException, ClassNotFoundException {
 
-        FileReader fileReader = new FileReader();
-        BufferedReader reader = fileReader.readFile();
-
-        List<String> fileIntoList = transformFileIntoList(reader);
         String turnoverType = identifyTurnoverByType(fileIntoList.get(0));
-
         List<Turnover> turnoverList = transformIntoTurnoverList(turnoverType, fileIntoList);
 
-        reader.close();
+        return turnoverList;
     }
 
-    public ArrayList<String> transformFileIntoList(BufferedReader reader) throws IOException {
+    public ArrayList<String> transformFileIntoList(Reader reader) throws IOException {
 
         String fileLine = null;
         ArrayList<String> turnoverArrayList = new ArrayList<String>();
 
-
-        while ((fileLine = reader.readLine()) != null) {
+        while ((fileLine = ((BufferedReader)reader).readLine()) != null) {
             turnoverArrayList.add(fileLine);
         }
 

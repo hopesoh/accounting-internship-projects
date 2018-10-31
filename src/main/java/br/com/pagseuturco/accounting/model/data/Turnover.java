@@ -1,13 +1,14 @@
-package br.com.pagseuturco.accounting.data;
+package br.com.pagseuturco.accounting.model.data;
 
 import java.math.BigDecimal;
-import java.util.Objects;
 
 public interface Turnover {
 
     public Integer getAccount();
 
     public String getDate();
+
+    public String getType();
 
     @Override
     public boolean equals(Object o);

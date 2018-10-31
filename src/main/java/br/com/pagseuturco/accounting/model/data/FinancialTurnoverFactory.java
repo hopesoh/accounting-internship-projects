@@ -1,4 +1,4 @@
-package br.com.pagseuturco.accounting.data;
+package br.com.pagseuturco.accounting.model.data;
 
 import java.sql.SQLException;
 

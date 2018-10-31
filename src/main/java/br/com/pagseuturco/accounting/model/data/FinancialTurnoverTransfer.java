@@ -1,17 +1,15 @@
-package br.com.pagseuturco.accounting.data;
+package br.com.pagseuturco.accounting.model.data;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.Objects;
 import java.sql.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class FinancialTurnoverTransfer implements Turnover {
     private String type;
     private BigDecimal value;
     private Integer account;
     private String date;
+    private String turnoverType = "TRANSFER";
 
     public FinancialTurnoverTransfer(String[] splittedLine) throws ClassNotFoundException, SQLException {
         type = splittedLine[0];
@@ -35,6 +33,12 @@ public class FinancialTurnoverTransfer implements Turnover {
     public String getDate() {
         return date;
     }
+
+    @Override
+    public String getType() {
+        return turnoverType;
+    }
+
 
     @Override
     public BigDecimal getValue() {

@@ -1,7 +1,6 @@
-package br.com.pagseuturco.accounting.data;
+package br.com.pagseuturco.accounting.model.data;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.Objects;
 import java.sql.*;
 
@@ -13,6 +12,7 @@ public class FinancialTurnoverBooklet implements Turnover {
     private Integer account;
     private String date;
     private String id;
+    private String turnoverType = "BOOKLET";
 
     public FinancialTurnoverBooklet(String[] splittedLine) throws SQLException, ClassNotFoundException {
         documentNumber = splittedLine[0];
@@ -37,6 +37,11 @@ public class FinancialTurnoverBooklet implements Turnover {
     @Override
     public String getDate() {
         return date;
+    }
+
+    @Override
+    public String getType() {
+        return turnoverType;
     }
 
     @Override

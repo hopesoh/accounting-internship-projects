@@ -1,14 +1,9 @@
-package br.com.pagseuturco.accounting.init;
+package br.com.pagseuturco.accounting.view.init.data;
 
-import br.com.pagseuturco.accounting.data.*;
+import br.com.pagseuturco.accounting.model.data.*;
 import org.junit.Test;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.StringReader;
-import java.math.BigDecimal;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
 

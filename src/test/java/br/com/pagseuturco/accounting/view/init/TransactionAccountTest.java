@@ -1,14 +1,12 @@
-package br.com.pagseuturco.accounting.init;
+package br.com.pagseuturco.accounting.view.init;
 
-import br.com.pagseuturco.accounting.data.FinancialTurnoverFactory;
-import br.com.pagseuturco.accounting.data.TransactionsAccounting;
-import br.com.pagseuturco.accounting.data.Turnover;
+import br.com.pagseuturco.accounting.model.data.FinancialTurnoverFactory;
+import br.com.pagseuturco.accounting.model.data.Turnover;
 import org.junit.Test;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
-import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
