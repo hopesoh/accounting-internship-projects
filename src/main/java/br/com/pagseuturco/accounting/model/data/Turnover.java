@@ -8,7 +8,7 @@ public interface Turnover {
 
     public String getDate();
 
-    public String getType();
+    public String getTurnoverType();
 
     @Override
     public boolean equals(Object o);
@@ -18,4 +18,7 @@ public interface Turnover {
 
     public BigDecimal getValue();
 
+    public String getType();
+
+    public String getName();
 }

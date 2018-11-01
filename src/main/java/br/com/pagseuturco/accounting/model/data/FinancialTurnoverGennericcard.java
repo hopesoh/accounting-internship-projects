@@ -1,7 +1,6 @@
 package br.com.pagseuturco.accounting.model.data;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.Objects;
 import java.sql.*;
 
@@ -25,8 +24,6 @@ public class FinancialTurnoverGennericcard implements Turnover {
             account = Integer.parseInt(splittedLine[3]);
         }
         date = splittedLine[4];
-
-        process(type, value, account, date);
     }
 
     @Override
@@ -40,7 +37,7 @@ public class FinancialTurnoverGennericcard implements Turnover {
     }
 
     @Override
-    public String getType() {
+    public String getTurnoverType() {
         return turnoverType;
     }
 
@@ -49,16 +46,14 @@ public class FinancialTurnoverGennericcard implements Turnover {
         return value;
     }
 
-    public void process(String type, BigDecimal value, Integer account, String date) throws SQLException, ClassNotFoundException {
-        Connection connect = null;
-        Statement statement = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
+    @Override
+    public String getType() {
+        return type;
+    }
 
-        BigDecimal valueToAccountNumberOne = calculateTaxByTransactionType(type, value);
-        BigDecimal gennericcardValueSubtractTax = value.subtract(valueToAccountNumberOne);
-
-
+    @Override
+    public String getName() {
+        return null;
     }
 
     public BigDecimal calculateTaxByTransactionType(String type, BigDecimal value) {

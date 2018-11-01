@@ -3,9 +3,8 @@ package br.com.pagseuturco.accounting.controller;
 import br.com.pagseuturco.accounting.model.data.AccountingDAO;
 import br.com.pagseuturco.accounting.model.data.Turnover;
 import br.com.pagseuturco.accounting.view.file.FileReader;
-import br.com.pagseuturco.accounting.view.init.TransactionAccount;
+import br.com.pagseuturco.accounting.model.data.TransactionAccount;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.sql.SQLException;
@@ -28,16 +27,16 @@ public class AccountingController {
     }
 
     public void accountForTextFiles() throws IOException, SQLException, ClassNotFoundException {
-        Reader financialTurnoverFile = fileReader.readFile(); //Solicitar nomes dos locais onde se encontram os arquivos
-        List<String> fileIntoList = transactionAccount.transformFileIntoList(financialTurnoverFile); //Ler arquivos
 
-        //Contabilização
+        Reader financialTurnoverFile = fileReader.readFile();
+        List<String> fileIntoList = transactionAccount.transformFileIntoList(financialTurnoverFile);
+
         List<Turnover> turnoverList = transactionAccount.processFile(fileIntoList);
 
-        //Salva os dados
         accountingDAO.saveFinancialTurnover(turnoverList);
 
-        //Apresenta uma mensagem bonita para o usuário =)
+        fileReader.showSuccessMessage();
+
         financialTurnoverFile.close();
     }
 

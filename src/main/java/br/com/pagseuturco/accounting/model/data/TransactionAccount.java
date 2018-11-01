@@ -1,4 +1,4 @@
-package br.com.pagseuturco.accounting.view.init;
+package br.com.pagseuturco.accounting.model.data;
 
 import br.com.pagseuturco.accounting.model.data.FinancialTurnoverFactory;
 import br.com.pagseuturco.accounting.model.data.Turnover;

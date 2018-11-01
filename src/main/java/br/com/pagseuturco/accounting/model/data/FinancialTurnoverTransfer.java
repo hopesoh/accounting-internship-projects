@@ -12,6 +12,7 @@ public class FinancialTurnoverTransfer implements Turnover {
     private String turnoverType = "TRANSFER";
 
     public FinancialTurnoverTransfer(String[] splittedLine) throws ClassNotFoundException, SQLException {
+
         type = splittedLine[0];
         if (!splittedLine[1].isEmpty()) {
             value = new BigDecimal(splittedLine[1]);
@@ -21,7 +22,6 @@ public class FinancialTurnoverTransfer implements Turnover {
         }
         date = splittedLine[3];
 
-        process(account, value, type,date);
     }
 
     @Override
@@ -35,38 +35,20 @@ public class FinancialTurnoverTransfer implements Turnover {
     }
 
     @Override
-    public String getType() {
+    public String getTurnoverType() {
         return turnoverType;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    @Override
+    public String getName() { return null; }
 
     @Override
     public BigDecimal getValue() {
         return value;
-    }
-
-    public void process(Integer account, BigDecimal value, String type, String date) throws ClassNotFoundException, SQLException {
-        Connection connect = null;
-        Statement statement = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
-
-        try {
-
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            connect = DriverManager.getConnection("jdbc:mysql://localhost/financial_turnover?"
-                    + "user=sqluser&password=sqluserpw");
-
-            preparedStatement = connect.prepareStatement("insert into financial_turnover.transfer values(default,?,?,?,?)");
-            preparedStatement.setInt(1,account);
-            preparedStatement.setBigDecimal(2, value);
-            preparedStatement.setString(3,type);
-            preparedStatement.setString(4,date);
-            preparedStatement.executeUpdate();
-
-        } catch (Exception e) {
-            throw e;
-        }
     }
 
     @Override

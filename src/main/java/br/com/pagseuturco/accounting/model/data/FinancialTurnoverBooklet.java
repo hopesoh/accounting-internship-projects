@@ -26,7 +26,6 @@ public class FinancialTurnoverBooklet implements Turnover {
         date = splittedLine[5];
         id = splittedLine[2];
 
-        process(name, value, account, date);
     }
 
     @Override
@@ -39,8 +38,12 @@ public class FinancialTurnoverBooklet implements Turnover {
         return date;
     }
 
+    public String getName() {
+        return name;
+    }
+
     @Override
-    public String getType() {
+    public String getTurnoverType() {
         return turnoverType;
     }
 
@@ -49,38 +52,9 @@ public class FinancialTurnoverBooklet implements Turnover {
         return value;
     }
 
-    public void process(String name, BigDecimal value, Integer account, String date) throws SQLException, ClassNotFoundException {
-        Connection connect = null;
-        Statement statement = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
-
-        BigDecimal bookletValueSubtractTax = value.subtract(BOOKLET_TAX);
-
-        try {
-
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            connect = DriverManager.getConnection("jdbc:mysql://localhost/financial_turnover?"
-                    + "user=sqluser&password=sqluserpw");
-
-            preparedStatement = connect.prepareStatement("insert into financial_turnover.booklet values(default,?,?,?,?)");
-            preparedStatement.setInt(1, account);
-            preparedStatement.setBigDecimal(2, bookletValueSubtractTax);
-            preparedStatement.setString(3, name);
-            preparedStatement.setString(4, date);
-            preparedStatement.executeUpdate();
-
-            preparedStatement = connect.prepareStatement("insert into financial_turnover.pagseuturco_account values(default,?,?,?,?)");
-            preparedStatement.setInt(1, account);
-            preparedStatement.setBigDecimal(2, BOOKLET_TAX);
-            preparedStatement.setString(3, "Booklet");
-            preparedStatement.setString(4, date);
-            preparedStatement.executeUpdate();
-
-
-        } catch (Exception e) {
-            throw e;
-        }
+    @Override
+    public String getType() {
+        return null;
     }
 
     @Override

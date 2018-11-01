@@ -21,4 +21,9 @@ public class FileReader {
         BufferedReader reader = new BufferedReader(in);
         return reader;
     }
+
+    public void showSuccessMessage() {
+        System.out.println("Sucesso! Todas as mensagens foram adicionadas ao banco de dados! :D");
+    }
+
 }

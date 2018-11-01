@@ -1,6 +1,7 @@
 package br.com.pagseuturco.accounting.view.init;
 
 import br.com.pagseuturco.accounting.model.data.FinancialTurnoverFactory;
+import br.com.pagseuturco.accounting.model.data.TransactionAccount;
 import br.com.pagseuturco.accounting.model.data.Turnover;
 import org.junit.Test;
 
@@ -70,7 +71,7 @@ public class TransactionAccountTest {
         assertEquals(expectedData, account.transformIntoTurnoverList(turnoverType, financialTurnoverDocument));
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void transformIntoTurnoverListMissingAccountField() throws IOException, SQLException, ClassNotFoundException {
         List<String> financialTurnoverDocument = new ArrayList<>();
         financialTurnoverDocument.add("tipo;valor;conta;data_transacao\n");
@@ -91,7 +92,7 @@ public class TransactionAccountTest {
         assertEquals(expectedData, account.transformIntoTurnoverList(turnoverType, financialTurnoverDocument));
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void transformIntoTurnoverListMissingAllFields() throws IOException, SQLException, ClassNotFoundException {
         List<String> financialTurnoverDocument = new ArrayList<>();
         financialTurnoverDocument.add("tipo;valor;conta;data_transacao\n");

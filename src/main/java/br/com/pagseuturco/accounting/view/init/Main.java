@@ -2,6 +2,7 @@ package br.com.pagseuturco.accounting.view.init;
 
 import br.com.pagseuturco.accounting.controller.AccountingController;
 import br.com.pagseuturco.accounting.model.data.AccountingDAO;
+import br.com.pagseuturco.accounting.model.data.TransactionAccount;
 import br.com.pagseuturco.accounting.view.file.FileReader;
 
 import java.io.*;
@@ -10,8 +11,8 @@ import java.sql.SQLException;
 class Main {
 
     public static void main(String[] args) throws SQLException, ClassNotFoundException, IOException {
-        TransactionAccount transactionAccount = new TransactionAccount();
         AccountingController accountingController = new AccountingController(new FileReader(), new TransactionAccount(), new AccountingDAO());
+        accountingController.accountForTextFiles();
     }
 
 }
