@@ -1,9 +1,5 @@
 package br.com.pagseuturco.accounting.model.data;
 
-import br.com.pagseuturco.accounting.model.data.FinancialTurnoverFactory;
-import br.com.pagseuturco.accounting.model.data.Turnover;
-import br.com.pagseuturco.accounting.view.file.FileReader;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;

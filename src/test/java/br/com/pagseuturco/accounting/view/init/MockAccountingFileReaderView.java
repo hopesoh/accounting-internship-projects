@@ -1,14 +1,15 @@
 package br.com.pagseuturco.accounting.view.init;
 
-import br.com.pagseuturco.accounting.view.file.FileReader;
+import br.com.pagseuturco.accounting.view.file.AccountingFileReaderView;
 
+import java.io.BufferedReader;
 import java.io.Reader;
 import java.io.StringReader;
 
-public class MockFileReader extends FileReader {
+public class MockAccountingFileReaderView extends AccountingFileReaderView {
 
     public Reader readFile() {
-        return new StringReader( "tipo;valor;conta;data_transacao\n" +
+        return new BufferedReader(new StringReader( "tipo;valor;conta;data_transacao\n" +
                 "DEBITO;130.55;101;15/08/2018\n" +
                 "CREDITO;130.55;102;15/08/2018\n" +
                 "DEBITO;10.95;102;15/08/2018\n" +
@@ -30,7 +31,7 @@ public class MockFileReader extends FileReader {
                 "DEBITO;145.35;102;15/08/2018\n" +
                 "CREDITO;13.50;101;15/08/2018\n" +
                 "DEBITO;13.50;102;15/08/2018\n"
-        );
+        ));
     }
 
 }

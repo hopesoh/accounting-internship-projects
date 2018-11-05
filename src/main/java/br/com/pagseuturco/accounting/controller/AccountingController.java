@@ -2,7 +2,7 @@ package br.com.pagseuturco.accounting.controller;
 
 import br.com.pagseuturco.accounting.model.data.AccountingDAO;
 import br.com.pagseuturco.accounting.model.data.Turnover;
-import br.com.pagseuturco.accounting.view.file.FileReader;
+import br.com.pagseuturco.accounting.view.file.AccountingFileReaderView;
 import br.com.pagseuturco.accounting.model.data.TransactionAccount;
 
 import java.io.IOException;
@@ -16,35 +16,28 @@ import java.util.List;
  */
 public class AccountingController {
 
-    private FileReader fileReader;
+    private AccountingFileReaderView accountingFileReaderView;
     private TransactionAccount transactionAccount;
     private AccountingDAO accountingDAO;
 
-    public AccountingController(FileReader fileReader, TransactionAccount transactionAccount, AccountingDAO accountingDAO) {
-        this.fileReader = fileReader;
+    public AccountingController(AccountingFileReaderView accountingFileReaderView, TransactionAccount transactionAccount, AccountingDAO accountingDAO) {
+        this.accountingFileReaderView = accountingFileReaderView;
         this.transactionAccount = transactionAccount;
         this.accountingDAO = accountingDAO;
     }
 
     public void accountForTextFiles() throws IOException, SQLException, ClassNotFoundException {
 
-        Reader financialTurnoverFile = fileReader.readFile();
+        Reader financialTurnoverFile = accountingFileReaderView.readFile();
         List<String> fileIntoList = transactionAccount.transformFileIntoList(financialTurnoverFile);
 
         List<Turnover> turnoverList = transactionAccount.processFile(fileIntoList);
 
         accountingDAO.saveFinancialTurnover(turnoverList);
 
-        fileReader.showSuccessMessage();
+        accountingFileReaderView.showSuccessMessage();
 
         financialTurnoverFile.close();
-    }
-
-    public void accountForDatabase() {
-        //Ler dados do banco de dados
-        //Contabilização
-        //Salva os dados
-        //Apresenta uma mensagem bonita para o usuário =)
     }
 
 }

@@ -3,7 +3,12 @@ package br.com.pagseuturco.accounting.view.file;
 import java.io.*;
 import java.util.Scanner;
 
-public class FileReader {
+/**
+ * View da funcionalidade de contabilização para entrada via arquivos.
+ * Esta classe tem por função realizar a contabilização por entrada via arquivo.
+ */
+public class AccountingFileReaderView {
+
     public Reader readFile () throws FileNotFoundException {
         Scanner input = new Scanner(System.in);
         System.out.print( "Insira o caminho do arquivo: " );
