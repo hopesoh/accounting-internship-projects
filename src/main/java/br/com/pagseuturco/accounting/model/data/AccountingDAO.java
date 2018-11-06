@@ -6,11 +6,18 @@ import java.sql.*;
 import java.util.List;
 
 public class AccountingDAO {
+
     private static final BigDecimal BOOKLET_TAX = new BigDecimal(0.25);
     private static final BigDecimal CREDIT_TAX = new BigDecimal(0.02);
     private static final BigDecimal DEBIT_TAX = new BigDecimal(0.035);
 
-    TransactionAccount transactionAccount;
+    private String jdbcDriver;
+    private String jdbcURL;
+
+    public AccountingDAO(String jdbcDriver, String jdbcURL) {
+        this.jdbcDriver = jdbcDriver;
+        this.jdbcURL = jdbcURL;
+    }
 
     public void saveFinancialTurnover(List<Turnover> turnoverList) throws SQLException, ClassNotFoundException {
 
@@ -29,6 +36,40 @@ public class AccountingDAO {
 
     }
 
+    public List<Turnover> findAll(String turnoverType) {
+        Connection connect;
+
+        //seleciona tudo que está no banco
+        try {
+
+            Class.forName(jdbcDriver);
+            connect = DriverManager.getConnection(jdbcURL);
+            Statement stmt = connect.createStatement();
+
+            String stringSelect = "select * from financial_turnover.transfer;";
+
+            ResultSet rset = stmt.executeQuery(stringSelect);
+
+            int rowCount = 0;
+            while (rset.next()) {
+                String title = rset.getString("account");
+                BigDecimal value = rset.getBigDecimal("value");
+                String type = rset.getString("type");
+                String date = rset.getString("date");
+
+
+                ++rowCount;
+            }
+
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
     private void saveFinancialTurnoverTransfer(Turnover turnover) throws SQLException, ClassNotFoundException {
 
         Connection connect;
@@ -36,9 +77,8 @@ public class AccountingDAO {
 
         try {
 
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            connect = DriverManager.getConnection("jdbc:mysql://localhost/financial_turnover?"
-                    + "user=sqluser&password=sqluserpw");
+            Class.forName(jdbcDriver);
+            connect = DriverManager.getConnection(jdbcURL);
 
             preparedStatement = connect.prepareStatement("insert into financial_turnover.transfer values(default,?,?,?,?)");
             preparedStatement.setInt(1, turnover.getAccount());
@@ -60,9 +100,8 @@ public class AccountingDAO {
 
         try {
 
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            connect = DriverManager.getConnection("jdbc:mysql://localhost/financial_turnover?"
-                    + "user=sqluser&password=sqluserpw");
+            Class.forName(jdbcDriver);
+            connect = DriverManager.getConnection(jdbcURL);
 
             preparedStatement = connect.prepareStatement("insert into financial_turnover.booklet values(default,?,?,?,?)");
             preparedStatement.setInt(1, turnover.getAccount());
@@ -93,9 +132,8 @@ public class AccountingDAO {
 
         try {
 
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            connect = DriverManager.getConnection("jdbc:mysql://localhost/financial_turnover?"
-                    + "user=sqluser&password=sqluserpw");
+            Class.forName(jdbcDriver);
+            connect = DriverManager.getConnection(jdbcURL);
 
             preparedStatement = connect.prepareStatement("insert into financial_turnover.gennericcard values(default,?,?,?,?)");
             preparedStatement.setInt(1, turnover.getAccount());
@@ -117,7 +155,7 @@ public class AccountingDAO {
         }
     }
 
-    public BigDecimal calculateTaxByTransactionType(String type, BigDecimal value) {
+    private BigDecimal calculateTaxByTransactionType(String type, BigDecimal value) {
         if (type == "CREDIT") {
             return value.multiply(CREDIT_TAX);
         } else {

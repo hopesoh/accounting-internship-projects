@@ -1,4 +1,4 @@
-package model;
+package br.com.pagseuturco.accounting.model;
 
 import br.com.pagseuturco.accounting.model.data.*;
 import org.junit.Test;
