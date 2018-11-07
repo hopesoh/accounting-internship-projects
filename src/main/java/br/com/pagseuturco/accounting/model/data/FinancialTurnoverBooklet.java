@@ -28,6 +28,8 @@ public class FinancialTurnoverBooklet implements Turnover {
 
     }
 
+    public String getDocumentNumber() { return documentNumber; }
+
     @Override
     public Integer getAccount() {
         return account;
@@ -40,6 +42,11 @@ public class FinancialTurnoverBooklet implements Turnover {
 
     public String getName() {
         return name;
+    }
+
+    @Override
+    public String getCardsHash() {
+        return null;
     }
 
     @Override

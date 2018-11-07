@@ -21,4 +21,8 @@ public interface Turnover {
     public String getType();
 
     public String getName();
+
+    public String getCardsHash();
+
+    public String getDocumentNumber();
 }

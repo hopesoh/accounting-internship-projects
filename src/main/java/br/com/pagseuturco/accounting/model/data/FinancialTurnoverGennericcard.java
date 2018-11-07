@@ -26,6 +26,7 @@ public class FinancialTurnoverGennericcard implements Turnover {
         date = splittedLine[4];
     }
 
+
     @Override
     public Integer getAccount() {
         return account;
@@ -56,12 +57,12 @@ public class FinancialTurnoverGennericcard implements Turnover {
         return null;
     }
 
-    public BigDecimal calculateTaxByTransactionType(String type, BigDecimal value) {
-        if (type == "CREDIT") {
-            return value.multiply(CREDIT_TAX);
-        } else {
-            return value.multiply(DEBIT_TAX);
-        }
+    @Override
+    public String getCardsHash() { return cardsHash; }
+
+    @Override
+    public String getDocumentNumber() {
+        return null;
     }
 
     @Override

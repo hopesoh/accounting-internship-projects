@@ -8,7 +8,7 @@ import br.com.pagseuturco.accounting.view.file.AccountingFileReaderView;
 import java.io.*;
 import java.sql.SQLException;
 
-class Main {
+public class Main {
     private static final String MYSQL_JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
     private static final String MYSQL_JDBC_URL = "jdbc:mysql://localhost/financial_turnover?user=sqluser&password=sqluserpw";
 

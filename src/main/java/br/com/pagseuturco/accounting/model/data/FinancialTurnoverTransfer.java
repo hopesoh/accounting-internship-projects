@@ -11,7 +11,7 @@ public class FinancialTurnoverTransfer implements Turnover {
     private String date;
     private String turnoverType = "TRANSFER";
 
-    public FinancialTurnoverTransfer(String[] splittedLine) throws ClassNotFoundException, SQLException {
+    public FinancialTurnoverTransfer(String[] splittedLine) {
 
         type = splittedLine[0];
         if (!splittedLine[1].isEmpty()) {
@@ -45,6 +45,16 @@ public class FinancialTurnoverTransfer implements Turnover {
 
     @Override
     public String getName() { return null; }
+
+    @Override
+    public String getCardsHash() {
+        return null;
+    }
+
+    @Override
+    public String getDocumentNumber() {
+        return null;
+    }
 
     @Override
     public BigDecimal getValue() {

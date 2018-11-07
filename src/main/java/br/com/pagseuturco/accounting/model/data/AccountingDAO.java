@@ -3,6 +3,7 @@ package br.com.pagseuturco.accounting.model.data;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class AccountingDAO {
@@ -37,38 +38,111 @@ public class AccountingDAO {
     }
 
     public List<Turnover> findAll(String turnoverType) {
-        Connection connect;
+        List<Turnover> turnoverList = new ArrayList<>();
 
-        //seleciona tudo que está no banco
-        try {
-
-            Class.forName(jdbcDriver);
-            connect = DriverManager.getConnection(jdbcURL);
-            Statement stmt = connect.createStatement();
-
-            String stringSelect = "select * from financial_turnover.transfer;";
-
-            ResultSet rset = stmt.executeQuery(stringSelect);
-
-            int rowCount = 0;
-            while (rset.next()) {
-                String title = rset.getString("account");
-                BigDecimal value = rset.getBigDecimal("value");
-                String type = rset.getString("type");
-                String date = rset.getString("date");
-
-
-                ++rowCount;
-            }
-
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
-            e.printStackTrace();
+        if (turnoverType == "TRANSFER") {
+            turnoverList = findAllTransferType();
+        } else if (turnoverType == "BOOKLET") {
+            turnoverList = findAllGennericcardType();
+        } else if (turnoverType == "GENNERICCARD") {
+            turnoverList = findAllBookletType();
         }
 
-        return null;
+        return turnoverList;
     }
+
+    public List<Turnover> findAllTransferType() {
+        Connection connection;
+        Statement statement;
+        List<Turnover> turnoverArrayList = new ArrayList<>();
+
+        try {
+            Class.forName(jdbcDriver);
+            connection = DriverManager.getConnection(jdbcURL);
+            statement = connection.createStatement();
+
+            String selectQuery = "select * from financial_turnover.transfer;";
+            ResultSet resultSet = statement.executeQuery(selectQuery);
+
+            while (resultSet.next()) {
+                String account = resultSet.getString("account");
+                String value = (resultSet.getBigDecimal("value")).toString();
+                String type = resultSet.getString("type");
+                String date = resultSet.getString("date");
+
+                String[] splittedLine = new String[]{type, value, account, date};
+                Turnover turnover = new FinancialTurnoverTransfer(splittedLine);
+                turnoverArrayList.add(turnover);
+            }
+
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }
+        return turnoverArrayList;
+    }
+
+    public List<Turnover> findAllGennericcardType() {
+        Connection connection;
+        Statement statement;
+        List<Turnover> turnoverArrayList = new ArrayList<>();
+
+        try {
+            Class.forName(jdbcDriver);
+            connection = DriverManager.getConnection(jdbcURL);
+            statement = connection.createStatement();
+
+            String selectQuery = "select * from financial_turnover.gennericcard;";
+            ResultSet resultSet = statement.executeQuery(selectQuery);
+
+            while (resultSet.next()) {
+                String cardHash = resultSet.getString("cardhash");
+                String type = resultSet.getString("type");
+                String value = (resultSet.getBigDecimal("value")).toString();
+                String account = Integer.toString(resultSet.getInt("account"));
+                String date = resultSet.getString("date");
+
+                String[] splittedLine = new String[]{cardHash, type, value, account, date};
+                Turnover turnover = new FinancialTurnoverGennericcard(splittedLine);
+                turnoverArrayList.add(turnover);
+            }
+
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }
+        return turnoverArrayList;
+    }
+
+    public List<Turnover> findAllBookletType() {
+        Connection connection;
+        Statement statement;
+        List<Turnover> turnoverArrayList = new ArrayList<>();
+
+        try {
+            Class.forName(jdbcDriver);
+            connection = DriverManager.getConnection(jdbcURL);
+            statement = connection.createStatement();
+
+            String selectQuery = "select * from financial_turnover.booklet;";
+            ResultSet resultSet = statement.executeQuery(selectQuery);
+
+            while (resultSet.next()) {
+                String name = resultSet.getString("name");
+                String identification = resultSet.getString("type");
+                String value = (resultSet.getBigDecimal("value")).toString();
+                String account = Integer.toString(resultSet.getInt("account"));
+                String date = resultSet.getString("date");
+
+                String[] splittedLine = new String[]{name, identification, value, account, date};
+                Turnover turnover = new FinancialTurnoverTransfer(splittedLine);
+                turnoverArrayList.add(turnover);
+            }
+
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }
+        return turnoverArrayList;
+    }
+
 
     private void saveFinancialTurnoverTransfer(Turnover turnover) throws SQLException, ClassNotFoundException {
 
@@ -80,7 +154,7 @@ public class AccountingDAO {
             Class.forName(jdbcDriver);
             connect = DriverManager.getConnection(jdbcURL);
 
-            preparedStatement = connect.prepareStatement("insert into financial_turnover.transfer values(default,?,?,?,?)");
+            preparedStatement = connect.prepareStatement("insert into financial_turnover.transfer(id, account, value, type, date) values(default,?,?,?,?)");
             preparedStatement.setInt(1, turnover.getAccount());
             preparedStatement.setBigDecimal(2, turnover.getValue());
             preparedStatement.setString(3, turnover.getType());
@@ -103,11 +177,12 @@ public class AccountingDAO {
             Class.forName(jdbcDriver);
             connect = DriverManager.getConnection(jdbcURL);
 
-            preparedStatement = connect.prepareStatement("insert into financial_turnover.booklet values(default,?,?,?,?)");
-            preparedStatement.setInt(1, turnover.getAccount());
-            preparedStatement.setBigDecimal(2, bookletValueSubtractTax);
-            preparedStatement.setString(3, turnover.getName());
-            preparedStatement.setString(4, turnover.getDate());
+            preparedStatement = connect.prepareStatement("insert into financial_turnover.booklet values(default,?,?,?,?,?)");
+            preparedStatement.setString(1, turnover.getName());
+            preparedStatement.setString(2, turnover.getDocumentNumber());
+            preparedStatement.setBigDecimal(3, bookletValueSubtractTax);
+            preparedStatement.setInt(4, turnover.getAccount());
+            preparedStatement.setString(5, turnover.getDate());
             preparedStatement.executeUpdate();
 
             preparedStatement = connect.prepareStatement("insert into financial_turnover.pagseuturco_account values(default,?,?,?,?)");
@@ -135,11 +210,12 @@ public class AccountingDAO {
             Class.forName(jdbcDriver);
             connect = DriverManager.getConnection(jdbcURL);
 
-            preparedStatement = connect.prepareStatement("insert into financial_turnover.gennericcard values(default,?,?,?,?)");
-            preparedStatement.setInt(1, turnover.getAccount());
-            preparedStatement.setBigDecimal(2, gennericcardValueSubtractTax.setScale(2, RoundingMode.DOWN));
-            preparedStatement.setString(3, turnover.getType());
-            preparedStatement.setString(4, turnover.getDate());
+            preparedStatement = connect.prepareStatement("insert into financial_turnover.gennericcard values(default,?,?,?,?,?)");
+            preparedStatement.setString(1, turnover.getCardsHash());
+            preparedStatement.setString(2, turnover.getType());
+            preparedStatement.setBigDecimal(3, gennericcardValueSubtractTax.setScale(2, RoundingMode.DOWN));
+            preparedStatement.setInt(4, turnover.getAccount());
+            preparedStatement.setString(5, turnover.getDate());
             preparedStatement.executeUpdate();
 
             preparedStatement = connect.prepareStatement("insert into financial_turnover.pagseuturco_account values(default,?,?,?,?)");
