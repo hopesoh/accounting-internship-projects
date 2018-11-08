@@ -1,4 +1,4 @@
-package br.com.pagseuturco.accounting.view.init;
+package br.com.pagseuturco.accounting.init;
 
 import br.com.pagseuturco.accounting.view.file.AccountingFileReaderView;
 

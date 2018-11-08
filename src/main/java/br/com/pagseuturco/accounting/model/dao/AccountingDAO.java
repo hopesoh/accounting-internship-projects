@@ -1,4 +1,8 @@
-package br.com.pagseuturco.accounting.model.data;
+package br.com.pagseuturco.accounting.model.dao;
+
+import br.com.pagseuturco.accounting.model.domain.FinancialTurnoverGennericcard;
+import br.com.pagseuturco.accounting.model.domain.FinancialTurnoverTransfer;
+import br.com.pagseuturco.accounting.model.domain.Turnover;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -34,7 +38,6 @@ public class AccountingDAO {
 
             }
         }
-
     }
 
     public List<Turnover> findAll(String turnoverType) {
@@ -144,7 +147,7 @@ public class AccountingDAO {
     }
 
 
-    private void saveFinancialTurnoverTransfer(Turnover turnover) throws SQLException, ClassNotFoundException {
+    private void saveFinancialTurnoverTransfer(Turnover turnover) {
 
         Connection connect;
         PreparedStatement preparedStatement;
@@ -162,7 +165,7 @@ public class AccountingDAO {
             preparedStatement.executeUpdate();
 
         } catch (Exception e) {
-            throw e;
+            throw new RuntimeException();
         }
     }
 
@@ -231,12 +234,13 @@ public class AccountingDAO {
         }
     }
 
-    private BigDecimal calculateTaxByTransactionType(String type, BigDecimal value) {
-        if (type == "CREDIT") {
+    public BigDecimal calculateTaxByTransactionType(String type, BigDecimal value) {
+        if (type.equals("CREDIT")) {
             return value.multiply(CREDIT_TAX);
-        } else {
+        } else if (type.equals("DEBIT")) {
             return value.multiply(DEBIT_TAX);
+        } else {
+            throw new RuntimeException();
         }
     }
-
 }

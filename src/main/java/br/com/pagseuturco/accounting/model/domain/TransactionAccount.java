@@ -1,4 +1,4 @@
-package br.com.pagseuturco.accounting.model.data;
+package br.com.pagseuturco.accounting.model.domain;
 
 import java.io.BufferedReader;
 import java.io.IOException;

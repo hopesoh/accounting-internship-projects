@@ -1,9 +1,7 @@
-package br.com.pagseuturco.accounting.model.data;
-
-import java.sql.SQLException;
+package br.com.pagseuturco.accounting.model.domain;
 
 public class FinancialTurnoverFactory {
-    public Turnover build(String turnoverType, String[] splittedLine) throws SQLException, ClassNotFoundException {
+    public Turnover build(String turnoverType, String[] splittedLine) {
             switch (turnoverType) {
                 case "BOOKLET":
                     return new FinancialTurnoverBooklet(splittedLine);

@@ -8,7 +8,7 @@ apply plugin: 'java'
 version = '1.0'
 
 ext{ // Define uma variável para o build.gradle
-	classname = 'br.com.pagseuturco.accounting.view.init.Main'
+	classname = 'br.com.pagseuturco.accounting.init.Main'
 }
 
 repositories { // Indica em quais repositorios o deve ser buscado as bibliotecas (@see - https://mvnrepository.com/)

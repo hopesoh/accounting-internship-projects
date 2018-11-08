@@ -1,9 +1,9 @@
 package br.com.pagseuturco.accounting.controller;
 
-import br.com.pagseuturco.accounting.model.data.AccountingDAO;
-import br.com.pagseuturco.accounting.model.data.Turnover;
+import br.com.pagseuturco.accounting.model.dao.AccountingDAO;
+import br.com.pagseuturco.accounting.model.domain.Turnover;
 import br.com.pagseuturco.accounting.view.file.AccountingFileReaderView;
-import br.com.pagseuturco.accounting.model.data.TransactionAccount;
+import br.com.pagseuturco.accounting.model.domain.TransactionAccount;
 
 import java.io.IOException;
 import java.io.Reader;

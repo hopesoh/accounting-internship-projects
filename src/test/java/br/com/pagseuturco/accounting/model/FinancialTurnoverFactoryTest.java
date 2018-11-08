@@ -1,15 +1,13 @@
 package br.com.pagseuturco.accounting.model;
 
-import br.com.pagseuturco.accounting.model.data.*;
+import br.com.pagseuturco.accounting.model.domain.*;
 import org.junit.Test;
-
-import java.sql.SQLException;
 
 import static org.junit.Assert.assertEquals;
 
 public class FinancialTurnoverFactoryTest {
     @Test
-    public void buildFinancialTurnoverTransferType() throws SQLException, ClassNotFoundException {
+    public void buildFinancialTurnoverTransferType() {
         String turnoverType = "TRANSFER";
         String[] splittedLine = new String[4];
         splittedLine[0] = "DEBITO";
@@ -23,7 +21,7 @@ public class FinancialTurnoverFactoryTest {
     }
 
     @Test
-    public void buildFinancialTurnoverTransferTypeMissingAccountField() throws SQLException, ClassNotFoundException {
+    public void buildFinancialTurnoverTransferTypeMissingAccountField() {
         String turnoverType = "TRANSFER";
         String[] splittedLine = new String[4];
         splittedLine[0] = "DEBITO";
@@ -37,7 +35,7 @@ public class FinancialTurnoverFactoryTest {
     }
 
     @Test
-    public void buildFinancialTurnoverTransferTypeMissingAllFields() throws SQLException, ClassNotFoundException {
+    public void buildFinancialTurnoverTransferTypeMissingAllFields() {
         String turnoverType = "TRANSFER";
         String[] splittedLine = new String[4];
         splittedLine[0] = "";
@@ -51,7 +49,7 @@ public class FinancialTurnoverFactoryTest {
     }
 
     @Test(expected = NullPointerException.class)
-    public void buildFinancialTurnoverTransferTypeNullCase() throws SQLException, ClassNotFoundException {
+    public void buildFinancialTurnoverTransferTypeNullCase()  {
         String turnoverType = null;
         String[] splittedLine = new String[4];
         splittedLine[0] = "DEBITO";
@@ -64,7 +62,7 @@ public class FinancialTurnoverFactoryTest {
     }
 
     @Test(expected = NullPointerException.class)
-    public void buildFinancialTurnoverTransferTypeSplittedLineNullCase() throws SQLException, ClassNotFoundException {
+    public void buildFinancialTurnoverTransferTypeSplittedLineNullCase() {
         String turnoverType = "TRANSFER";
         String[] splittedLine = null;
         FinancialTurnoverFactory financialTurnoverFactory = new FinancialTurnoverFactory();

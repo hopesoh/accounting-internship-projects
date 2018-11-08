@@ -1,9 +1,9 @@
 package br.com.pagseuturco.accounting.model;
 
-import br.com.pagseuturco.accounting.model.data.FinancialTurnoverFactory;
-import br.com.pagseuturco.accounting.model.data.FinancialTurnoverTransfer;
-import br.com.pagseuturco.accounting.model.data.TransactionAccount;
-import br.com.pagseuturco.accounting.model.data.Turnover;
+import br.com.pagseuturco.accounting.model.domain.FinancialTurnoverFactory;
+import br.com.pagseuturco.accounting.model.domain.FinancialTurnoverTransfer;
+import br.com.pagseuturco.accounting.model.domain.TransactionAccount;
+import br.com.pagseuturco.accounting.model.domain.Turnover;
 import org.junit.Test;
 
 import java.io.BufferedReader;

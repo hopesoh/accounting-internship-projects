@@ -1,12 +1,9 @@
-package br.com.pagseuturco.accounting.model.data;
+package br.com.pagseuturco.accounting.model.domain;
 
 import java.math.BigDecimal;
 import java.util.Objects;
-import java.sql.*;
 
 public class FinancialTurnoverGennericcard implements Turnover {
-    private static final BigDecimal CREDIT_TAX = new BigDecimal(0.02);
-    private static final BigDecimal DEBIT_TAX = new BigDecimal(0.035);
     private String cardsHash;
     private String type;
     private BigDecimal value;
@@ -14,10 +11,12 @@ public class FinancialTurnoverGennericcard implements Turnover {
     private String date;
     private String turnoverType = "GENNERICCARD";
 
-    public FinancialTurnoverGennericcard(String[] splittedLine) throws SQLException, ClassNotFoundException {
+    public FinancialTurnoverGennericcard(String[] splittedLine) {
         cardsHash = splittedLine[0];
         type = splittedLine[1];
-        if (!splittedLine[2].isEmpty()) {
+        if (splittedLine[2]== null || splittedLine[2].isEmpty()) {
+            value = BigDecimal.ZERO;
+        } else {
             value = new BigDecimal(splittedLine[2]);
         }
         if (!splittedLine[3].isEmpty()) {

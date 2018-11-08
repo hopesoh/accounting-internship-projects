@@ -1,11 +1,9 @@
-package br.com.pagseuturco.accounting.model.data;
+package br.com.pagseuturco.accounting.model.domain;
 
 import java.math.BigDecimal;
 import java.util.Objects;
-import java.sql.*;
 
 public class FinancialTurnoverBooklet implements Turnover {
-    private static final BigDecimal BOOKLET_TAX = new BigDecimal(0.25);
     private String documentNumber;
     private String name;
     private BigDecimal value;
@@ -14,18 +12,19 @@ public class FinancialTurnoverBooklet implements Turnover {
     private String id;
     private String turnoverType = "BOOKLET";
 
-    public FinancialTurnoverBooklet(String[] splittedLine) throws SQLException, ClassNotFoundException {
+    public FinancialTurnoverBooklet(String[] splittedLine) {
         documentNumber = splittedLine[0];
         name = splittedLine[1];
-        if (!splittedLine[3].isEmpty()) {
+        id = splittedLine[2];
+        if (splittedLine[3]== null || splittedLine[3].isEmpty()) {
+            value = BigDecimal.ZERO;
+        } else {
             value = new BigDecimal(splittedLine[3]);
         }
         if (!splittedLine[4].isEmpty()) {
             account = Integer.parseInt(splittedLine[4]);
         }
         date = splittedLine[5];
-        id = splittedLine[2];
-
     }
 
     public String getDocumentNumber() { return documentNumber; }
@@ -56,6 +55,9 @@ public class FinancialTurnoverBooklet implements Turnover {
 
     @Override
     public BigDecimal getValue() {
+        if (value == null) {
+            return BigDecimal.ZERO;
+        }
         return value;
     }
 

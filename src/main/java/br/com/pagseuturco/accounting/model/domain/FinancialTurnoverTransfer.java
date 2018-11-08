@@ -1,8 +1,7 @@
-package br.com.pagseuturco.accounting.model.data;
+package br.com.pagseuturco.accounting.model.domain;
 
 import java.math.BigDecimal;
 import java.util.Objects;
-import java.sql.*;
 
 public class FinancialTurnoverTransfer implements Turnover {
     private String type;
@@ -14,12 +13,16 @@ public class FinancialTurnoverTransfer implements Turnover {
     public FinancialTurnoverTransfer(String[] splittedLine) {
 
         type = splittedLine[0];
-        if (!splittedLine[1].isEmpty()) {
+        if (splittedLine[1] == null || splittedLine[1].isEmpty()) {
+            value = BigDecimal.ZERO;
+        } else {
             value = new BigDecimal(splittedLine[1]);
         }
+
         if (!splittedLine[2].isEmpty()) {
             account = Integer.parseInt(splittedLine[2]);
         }
+
         date = splittedLine[3];
 
     }
@@ -58,6 +61,9 @@ public class FinancialTurnoverTransfer implements Turnover {
 
     @Override
     public BigDecimal getValue() {
+        if (value == null) {
+            return BigDecimal.ZERO;
+        }
         return value;
     }
 

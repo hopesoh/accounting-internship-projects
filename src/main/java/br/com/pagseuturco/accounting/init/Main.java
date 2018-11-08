@@ -1,8 +1,8 @@
-package br.com.pagseuturco.accounting.view.init;
+package br.com.pagseuturco.accounting.init;
 
 import br.com.pagseuturco.accounting.controller.AccountingController;
-import br.com.pagseuturco.accounting.model.data.AccountingDAO;
-import br.com.pagseuturco.accounting.model.data.TransactionAccount;
+import br.com.pagseuturco.accounting.model.dao.AccountingDAO;
+import br.com.pagseuturco.accounting.model.domain.TransactionAccount;
 import br.com.pagseuturco.accounting.view.file.AccountingFileReaderView;
 
 import java.io.*;
