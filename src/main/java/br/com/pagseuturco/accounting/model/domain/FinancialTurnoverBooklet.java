@@ -1,21 +1,24 @@
 package br.com.pagseuturco.accounting.model.domain;
 
+import br.com.pagseuturco.accounting.model.dao.mapper.SQLMapper;
+
 import java.math.BigDecimal;
 import java.util.Objects;
 
-public class FinancialTurnoverBooklet implements Turnover {
+public class FinancialTurnoverBooklet implements Turnover, BookletType {
     private String documentNumber;
     private String name;
     private BigDecimal value;
     private Integer account;
     private String date;
-    private String id;
+    private String identification;
     private String turnoverType = "BOOKLET";
+    private static final BigDecimal BOOKLET_TAX = new BigDecimal(0.25);
 
     public FinancialTurnoverBooklet(String[] splittedLine) {
         documentNumber = splittedLine[0];
         name = splittedLine[1];
-        id = splittedLine[2];
+        identification = splittedLine[2];
         if (splittedLine[3]== null || splittedLine[3].isEmpty()) {
             value = BigDecimal.ZERO;
         } else {
@@ -27,8 +30,6 @@ public class FinancialTurnoverBooklet implements Turnover {
         date = splittedLine[5];
     }
 
-    public String getDocumentNumber() { return documentNumber; }
-
     @Override
     public Integer getAccount() {
         return account;
@@ -39,15 +40,6 @@ public class FinancialTurnoverBooklet implements Turnover {
         return date;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public String getCardsHash() {
-        return null;
-    }
-
     @Override
     public String getTurnoverType() {
         return turnoverType;
@@ -55,15 +47,7 @@ public class FinancialTurnoverBooklet implements Turnover {
 
     @Override
     public BigDecimal getValue() {
-        if (value == null) {
-            return BigDecimal.ZERO;
-        }
         return value;
-    }
-
-    @Override
-    public String getType() {
-        return null;
     }
 
     @Override
@@ -78,7 +62,22 @@ public class FinancialTurnoverBooklet implements Turnover {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(name, value, account, date);
+    public SQLMapper getSQLMapper() {
+        return null;
+    }
+
+    @Override
+    public String getDocumentNumber() {
+        return documentNumber;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public String getIdentification() {
+        return identification;
     }
 }

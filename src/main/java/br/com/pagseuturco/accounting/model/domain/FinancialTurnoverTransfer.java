@@ -1,9 +1,15 @@
 package br.com.pagseuturco.accounting.model.domain;
 
+import br.com.pagseuturco.accounting.model.dao.mapper.SQLMapper;
+import br.com.pagseuturco.accounting.model.dao.mapper.TransferSQLMapper;
+
 import java.math.BigDecimal;
 import java.util.Objects;
 
-public class FinancialTurnoverTransfer implements Turnover {
+public class FinancialTurnoverTransfer implements TransferType, Turnover {
+
+    private static final TransferSQLMapper TRANSFER_SQL_MAPPER = new TransferSQLMapper();
+
     private String type;
     private BigDecimal value;
     private Integer account;
@@ -22,9 +28,7 @@ public class FinancialTurnoverTransfer implements Turnover {
         if (!splittedLine[2].isEmpty()) {
             account = Integer.parseInt(splittedLine[2]);
         }
-
         date = splittedLine[3];
-
     }
 
     @Override
@@ -42,34 +46,12 @@ public class FinancialTurnoverTransfer implements Turnover {
         return turnoverType;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    @Override
-    public String getName() { return null; }
-
-    @Override
-    public String getCardsHash() {
-        return null;
-    }
-
-    @Override
-    public String getDocumentNumber() {
-        return null;
-    }
-
     @Override
     public BigDecimal getValue() {
         if (value == null) {
             return BigDecimal.ZERO;
         }
         return value;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(type, value, account, date);
     }
 
     @Override
@@ -82,4 +64,15 @@ public class FinancialTurnoverTransfer implements Turnover {
                 Objects.equals(account, turnover.account) &&
                 Objects.equals(date, turnover.date);
     }
+
+    @Override
+    public String getType() {
+        return type;
+    }
+
+    @Override
+    public SQLMapper getSQLMapper() {
+        return TRANSFER_SQL_MAPPER;
+    }
+
 }

@@ -12,18 +12,4 @@ import java.util.List;
 
 public class AccountingControllerTest {
 
-    @Test
-    public void accountingControllerCallingAllMethodsUsingFinancialTurnoverTransferType() throws SQLException, IOException, ClassNotFoundException {
-        AccountingController accountingController = new AccountingController(
-                new MockAccountingFileReaderView(),
-                new TransactionAccount(),
-                new AccountingDAO("",""){
-                    @Override
-                    public void saveFinancialTurnover(List<Turnover> turnoverList) {
-                        System.out.println("As mensagens foram salvas no banco de dados.");
-                    }
-                }
-        );
-        accountingController.accountForTextFiles();
-    }
 }

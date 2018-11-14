@@ -1,9 +1,11 @@
 package br.com.pagseuturco.accounting.model.domain;
 
+import br.com.pagseuturco.accounting.model.dao.mapper.SQLMapper;
+
 import java.math.BigDecimal;
 import java.util.Objects;
 
-public class FinancialTurnoverGennericcard implements Turnover {
+public class FinancialTurnoverGennericcard implements Turnover, GennericcardType {
     private String cardsHash;
     private String type;
     private BigDecimal value;
@@ -47,24 +49,6 @@ public class FinancialTurnoverGennericcard implements Turnover {
     }
 
     @Override
-    public String getType() {
-        return type;
-    }
-
-    @Override
-    public String getName() {
-        return null;
-    }
-
-    @Override
-    public String getCardsHash() { return cardsHash; }
-
-    @Override
-    public String getDocumentNumber() {
-        return null;
-    }
-
-    @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
@@ -79,5 +63,20 @@ public class FinancialTurnoverGennericcard implements Turnover {
     @Override
     public int hashCode() {
         return Objects.hash(cardsHash, type, value, account, date);
+    }
+
+    @Override
+    public SQLMapper getSQLMapper() {
+        return null;
+    }
+
+    @Override
+    public String getType() {
+        return type;
+    }
+
+    @Override
+    public String getCardsHash() {
+        return cardsHash;
     }
 }

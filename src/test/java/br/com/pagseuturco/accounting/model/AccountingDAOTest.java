@@ -6,8 +6,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -37,74 +35,6 @@ public class AccountingDAOTest {
         createTable(DB_DRIVER, DB_CONNECTION, CREATE_TABLE_TRANSFER);
     }
 
-    @Test
-    public void saveAFinancialTurnoverTransferTypeIntoDatabaseWithAllFieldsComplete() throws SQLException, ClassNotFoundException {
-        AccountingDAO accountingDAO = new AccountingDAO(DB_DRIVER, DB_CONNECTION);
-        List<Turnover> turnoverList = new ArrayList<>();
-        String[] splittedLine = {"DEBITO", "130.55", "101", "15/08/2018"};
-        String turnoverType = "TRANSFER";
-
-        FinancialTurnoverTransfer financialTurnoverTransfer = new FinancialTurnoverTransfer(splittedLine);
-        turnoverList.add(financialTurnoverTransfer);
-        accountingDAO.saveFinancialTurnover(turnoverList);
-
-        List<Turnover> turnoverFoundIntoDatabase = accountingDAO.findAll(turnoverType);
-        Turnover foundTurnover = turnoverFoundIntoDatabase.get(0);
-
-        assertEquals(true, financialTurnoverTransfer.equals(foundTurnover));
-    }
-
-    @Test
-    public void saveAFinancialTurnoverTransferTypeIntoDatabaseMissingTransactionTypeField() throws SQLException, ClassNotFoundException {
-        AccountingDAO accountingDAO = new AccountingDAO(DB_DRIVER, DB_CONNECTION);
-        List<Turnover> turnoverList = new ArrayList<>();
-        String[] splittedLine = {"", "130.55", "101", "15/08/2018"};
-        String turnoverType = "TRANSFER";
-
-        FinancialTurnoverTransfer financialTurnoverTransfer = new FinancialTurnoverTransfer(splittedLine);
-        turnoverList.add(financialTurnoverTransfer);
-        accountingDAO.saveFinancialTurnover(turnoverList);
-
-        List<Turnover> turnoverFoundIntoDatabase = accountingDAO.findAll(turnoverType);
-        Turnover foundTurnover = turnoverFoundIntoDatabase.get(0);
-
-        assertEquals(true, financialTurnoverTransfer.equals(foundTurnover));
-    }
-
-    @Test
-    public void saveAFinancialTurnoverTransferTypeIntoDatabaseMissingDateField() throws SQLException, ClassNotFoundException {
-        AccountingDAO accountingDAO = new AccountingDAO(DB_DRIVER, DB_CONNECTION);
-        List<Turnover> turnoverList = new ArrayList<>();
-        String[] splittedLine = {"DEBITO", "130.55", "101", ""};
-        String turnoverType = "TRANSFER";
-
-        FinancialTurnoverTransfer financialTurnoverTransfer = new FinancialTurnoverTransfer(splittedLine);
-        turnoverList.add(financialTurnoverTransfer);
-        accountingDAO.saveFinancialTurnover(turnoverList);
-
-        List<Turnover> turnoverFoundIntoDatabase = accountingDAO.findAll(turnoverType);
-        Turnover foundTurnover = turnoverFoundIntoDatabase.get(0);
-
-        assertEquals(true, financialTurnoverTransfer.equals(foundTurnover));
-    }
-
-    @Test
-    public void saveAFinancialTurnoverTransferTypeIntoDatabaseMissingValueField() throws SQLException, ClassNotFoundException {
-        AccountingDAO accountingDAO = new AccountingDAO(DB_DRIVER, DB_CONNECTION);
-        List<Turnover> turnoverList = new ArrayList<>();
-        String[] splittedLine = {"DEBITO", "", "101", "15/08/2018"};
-        String turnoverType = "TRANSFER";
-
-        FinancialTurnoverTransfer financialTurnoverTransfer = new FinancialTurnoverTransfer(splittedLine);
-        turnoverList.add(financialTurnoverTransfer);
-        accountingDAO.saveFinancialTurnover(turnoverList);
-
-        List<Turnover> turnoverFoundIntoDatabase = accountingDAO.findAll(turnoverType);
-        Turnover foundTurnover = turnoverFoundIntoDatabase.get(0);
-
-        assertEquals(true, foundTurnover.equals(financialTurnoverTransfer));
-    }
-
     @Test (expected = RuntimeException.class)
     public void saveAFinancialTurnoverTransferTypeIntoDatabaseMissingAccountField() throws SQLException, ClassNotFoundException {
         AccountingDAO accountingDAO = new AccountingDAO(DB_DRIVER, DB_CONNECTION);
@@ -120,44 +50,6 @@ public class AccountingDAOTest {
         Turnover foundTurnover = turnoverFoundIntoDatabase.get(0);
 
         assertEquals(true, foundTurnover.equals(financialTurnoverTransfer));
-    }
-
-    @Test
-    public void findAllFinancialTurnoverTransferTypeSaveIntoDatabase() throws SQLException, ClassNotFoundException {
-        AccountingDAO accountingDAO = new AccountingDAO(DB_DRIVER, DB_CONNECTION);
-        List<Turnover> turnoverList = new ArrayList<>();
-        String[] splittedLine = {"DEBITO", "130.55", "101", "15/08/2018"};
-        String turnoverType = "TRANSFER";
-
-        FinancialTurnoverTransfer financialTurnoverTransfer = new FinancialTurnoverTransfer(splittedLine);
-        turnoverList.add(financialTurnoverTransfer);
-        accountingDAO.saveFinancialTurnover(turnoverList);
-
-        List<Turnover> turnoverFoundIntoDatabase = accountingDAO.findAll(turnoverType);
-
-        assertEquals(true, turnoverFoundIntoDatabase.equals(turnoverList));
-    }
-
-    @Test
-    public void calculateTaxByTransactionTypeCreditCase() {
-        String transactionType = "CREDIT";
-        BigDecimal gennericcardValue = BigDecimal.valueOf(13);
-
-        BigDecimal taxValue = (BigDecimal.valueOf(0.26)).setScale(5, RoundingMode.DOWN);
-        AccountingDAO accountingDAO = new AccountingDAO(DB_DRIVER, DB_CONNECTION);
-
-        assertEquals(taxValue, (accountingDAO.calculateTaxByTransactionType(transactionType,gennericcardValue)).setScale(5, RoundingMode.DOWN));
-    }
-
-    @Test
-    public void calculateTaxByTransactionTypeDebitCase() {
-        String transactionType = "DEBIT";
-        BigDecimal gennericcardValue = BigDecimal.valueOf(13);
-
-        BigDecimal taxValue = (BigDecimal.valueOf(0.455)).setScale(5, RoundingMode.DOWN);
-        AccountingDAO accountingDAO = new AccountingDAO(DB_DRIVER, DB_CONNECTION);
-
-        assertEquals(taxValue, (accountingDAO.calculateTaxByTransactionType(transactionType,gennericcardValue)).setScale(5, RoundingMode.DOWN));
     }
 
 
