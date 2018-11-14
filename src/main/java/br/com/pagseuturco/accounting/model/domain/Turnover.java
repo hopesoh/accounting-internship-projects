@@ -20,5 +20,6 @@ public interface Turnover {
     @Override
     int hashCode();
 
+
     SQLMapper getSQLMapper();
 }
