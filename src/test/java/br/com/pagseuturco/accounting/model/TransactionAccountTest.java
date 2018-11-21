@@ -4,6 +4,7 @@ import br.com.pagseuturco.accounting.model.domain.FinancialTurnoverFactory;
 import br.com.pagseuturco.accounting.model.domain.FinancialTurnoverTransfer;
 import br.com.pagseuturco.accounting.model.domain.TransactionAccount;
 import br.com.pagseuturco.accounting.model.domain.Turnover;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.BufferedReader;
@@ -43,7 +44,7 @@ public class TransactionAccountTest {
         assertEquals("TRANSFER", account.identifyTurnoverByType(transferHeader));
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void identifyFinancialTurnoverByTypeEnterInexistenceHeaderExpectedNull() {
         final String transferHeader = "tipo;valor_movimentacao;conta;data_transacao";
 
@@ -52,7 +53,7 @@ public class TransactionAccountTest {
     }
 
     @Test
-    public void transformIntoTurnoverListAllFieldsComplete() throws IOException, SQLException, ClassNotFoundException {
+    public void transformIntoTurnoverListAllFieldsComplete() {
         List<String> financialTurnoverDocument = new ArrayList<>();
         financialTurnoverDocument.add("tipo;valor;conta;data_transacao\n");
         financialTurnoverDocument.add("DEBITO;130.55;101;15/08/2018");
@@ -60,11 +61,7 @@ public class TransactionAccountTest {
         TransactionAccount account = new TransactionAccount();
 
         List<Turnover> expectedData = new ArrayList<Turnover>();
-        String[] splittedLine = new String[4];
-        splittedLine[0] = "DEBITO";
-        splittedLine[1] = "130.55";
-        splittedLine[2] = "101";
-        splittedLine[3] = "15/08/2018";
+        String[] splittedLine = new String[] {"DEBITO", "130.55", "101", "15/08/2018"};
         FinancialTurnoverFactory financialTurnoverFactory = new FinancialTurnoverFactory();
         Turnover financialTurnover = financialTurnoverFactory.build(turnoverType,splittedLine);
         expectedData.add(financialTurnover);
@@ -73,7 +70,7 @@ public class TransactionAccountTest {
     }
 
     @Test
-    public void transformIntoTurnoverListMissingAccountField() throws IOException, SQLException, ClassNotFoundException {
+    public void transformIntoTurnoverListMissingAccountField() {
         List<String> financialTurnoverDocument = new ArrayList<>();
         financialTurnoverDocument.add("tipo;valor;conta;data_transacao\n");
         financialTurnoverDocument.add("DEBITO;130.55;;15/08/2018");
@@ -81,11 +78,7 @@ public class TransactionAccountTest {
         TransactionAccount account = new TransactionAccount();
 
         List<Turnover> expectedData = new ArrayList<Turnover>();
-        String[] splittedLine = new String[4];
-        splittedLine[0] = "DEBITO";
-        splittedLine[1] = "130.55";
-        splittedLine[2] = "";
-        splittedLine[3] = "15/08/2018";
+        String[] splittedLine = new String[] {"DEBITO", "130.55", "", "15/08/2018"};
         FinancialTurnoverFactory financialTurnoverFactory = new FinancialTurnoverFactory();
         Turnover financialTurnover = financialTurnoverFactory.build(turnoverType,splittedLine);
         expectedData.add(financialTurnover);
@@ -94,7 +87,7 @@ public class TransactionAccountTest {
     }
 
     @Test
-    public void transformIntoTurnoverListMissingAllFields() throws IOException, SQLException, ClassNotFoundException {
+    public void transformIntoTurnoverListMissingAllFields() {
         List<String> financialTurnoverDocument = new ArrayList<>();
         financialTurnoverDocument.add("tipo;valor;conta;data_transacao\n");
         financialTurnoverDocument.add(";;;");
@@ -102,11 +95,7 @@ public class TransactionAccountTest {
         TransactionAccount account = new TransactionAccount();
 
         List<Turnover> expectedData = new ArrayList<Turnover>();
-        String[] splittedLine = new String[4];
-        splittedLine[0] = "";
-        splittedLine[1] = "";
-        splittedLine[2] = "";
-        splittedLine[3] = "";
+        String[] splittedLine = new String[] {"", "", "", ""};
         FinancialTurnoverFactory financialTurnoverFactory = new FinancialTurnoverFactory();
         Turnover financialTurnover = financialTurnoverFactory.build(turnoverType,splittedLine);
         expectedData.add(financialTurnover);
@@ -144,7 +133,7 @@ public class TransactionAccountTest {
     }
 
     @Test
-    public void transformIntoTurnoverListTransferTypeAllFieldsComplete() throws SQLException, ClassNotFoundException, IOException {
+    public void transformIntoTurnoverListTransferTypeAllFieldsComplete() {
         List<String> fileIntoList = new ArrayList<>();
         fileIntoList.add("tipo;valor;conta;data_transacao");
         fileIntoList.add("DEBITO;130.55;101;15/08/2018");
@@ -152,11 +141,7 @@ public class TransactionAccountTest {
         TransactionAccount account = new TransactionAccount();
 
         List<Turnover> expectedData = new ArrayList<Turnover>();
-        String[] splittedLine = new String[4];
-        splittedLine[0] = "DEBITO";
-        splittedLine[1] = "130.55";
-        splittedLine[2] = "101";
-        splittedLine[3] = "15/08/2018";
+        String[] splittedLine = new String[] {"DEBITO", "130.55", "101", "15/08/2018"};
 
         FinancialTurnoverTransfer financialTurnoverTransfer = new FinancialTurnoverTransfer(splittedLine);
         expectedData.add(financialTurnoverTransfer);
@@ -166,7 +151,7 @@ public class TransactionAccountTest {
     }
 
     @Test(expected = NullPointerException.class)
-    public void transformIntoTurnoverListEnterANullListExpectedNullReturn() throws SQLException, IOException, ClassNotFoundException {
+    public void transformIntoTurnoverListEnterANullListExpectedNullReturn() {
         List<String> fileIntoList = null;
         String turnoverType = "TRANSFER";
         TransactionAccount account = new TransactionAccount();
@@ -187,7 +172,7 @@ public class TransactionAccountTest {
 
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void identifyTurnoverByTypeIndeterminatedType() {
         String indeterminatedHeader = "tipo;nome;conta;data_transacao";
         TransactionAccount account = new TransactionAccount();

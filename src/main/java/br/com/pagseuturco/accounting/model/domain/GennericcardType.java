@@ -1,7 +1,8 @@
 package br.com.pagseuturco.accounting.model.domain;
 
-public interface GennericcardType {
+public interface GennericcardType extends ProfitInserter {
     String getType();
 
     String getCardsHash();
+
 }

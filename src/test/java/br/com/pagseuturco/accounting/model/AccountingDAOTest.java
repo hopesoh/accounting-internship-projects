@@ -25,33 +25,83 @@ public class AccountingDAOTest {
 
 
     @BeforeClass
-    public static void saladaMista() {
+    public static void createDatabase() {
         createTable(DB_DRIVER, DB_CONNECTION, CREATE_DATABASE);
     }
 
     @Before
-    public void peraUva() {
+    public void createTableTransfer() {
         createTable(DB_DRIVER, DB_CONNECTION, CLEAN_TABLE);
         createTable(DB_DRIVER, DB_CONNECTION, CREATE_TABLE_TRANSFER);
     }
 
-    @Test (expected = RuntimeException.class)
-    public void saveAFinancialTurnoverTransferTypeIntoDatabaseMissingAccountField() throws SQLException, ClassNotFoundException {
+    @Test
+    public void saveAFinancialTurnoverTransferTypeIntoDatabaseAllFieldsComplete() {
         AccountingDAO accountingDAO = new AccountingDAO(DB_DRIVER, DB_CONNECTION);
         List<Turnover> turnoverList = new ArrayList<>();
-        String[] splittedLine = {"DEBITO", "130.55", "", "15/08/2018"};
-        String turnoverType = "TRANSFER";
+        String[] splittedLine = {"DEBITO", "130.55", "101", "15/08/2018"};
 
         FinancialTurnoverTransfer financialTurnoverTransfer = new FinancialTurnoverTransfer(splittedLine);
         turnoverList.add(financialTurnoverTransfer);
         accountingDAO.saveFinancialTurnover(turnoverList);
 
-        List<Turnover> turnoverFoundIntoDatabase = accountingDAO.findAll(turnoverType);
+        Turnover turnover = new FinancialTurnoverTransfer(splittedLine);
+        List<Turnover> turnoverFoundIntoDatabase = accountingDAO.findAll(turnover);
         Turnover foundTurnover = turnoverFoundIntoDatabase.get(0);
 
         assertEquals(true, foundTurnover.equals(financialTurnoverTransfer));
     }
 
+    @Test(expected = RuntimeException.class)
+    public void saveAFinancialTurnoverTransferTypeIntoDatabaseMissingAccountField() {
+        AccountingDAO accountingDAO = new AccountingDAO(DB_DRIVER, DB_CONNECTION);
+        List<Turnover> turnoverList = new ArrayList<>();
+        String[] splittedLine = {"DEBITO", "130.55", "", "15/08/2018"};
+
+        FinancialTurnoverTransfer financialTurnoverTransfer = new FinancialTurnoverTransfer(splittedLine);
+        turnoverList.add(financialTurnoverTransfer);
+        accountingDAO.saveFinancialTurnover(turnoverList);
+
+        Turnover turnover = new FinancialTurnoverTransfer(splittedLine);
+        List<Turnover> turnoverFoundIntoDatabase = accountingDAO.findAll(turnover);
+        Turnover foundTurnover = turnoverFoundIntoDatabase.get(0);
+
+        assertEquals(true, foundTurnover.equals(financialTurnoverTransfer));
+    }
+
+    @Test
+    public void saveAFinancialTurnoverTransferTypeIntoDatabaseMissingValueField() {
+        AccountingDAO accountingDAO = new AccountingDAO(DB_DRIVER, DB_CONNECTION);
+        List<Turnover> turnoverList = new ArrayList<>();
+        String[] splittedLine = {"DEBITO", "", "101", "15/08/2018"};
+
+        FinancialTurnoverTransfer financialTurnoverTransfer = new FinancialTurnoverTransfer(splittedLine);
+        turnoverList.add(financialTurnoverTransfer);
+        accountingDAO.saveFinancialTurnover(turnoverList);
+
+        Turnover turnover = new FinancialTurnoverTransfer(splittedLine);
+        List<Turnover> turnoverFoundIntoDatabase = accountingDAO.findAll(turnover);
+        Turnover foundTurnover = turnoverFoundIntoDatabase.get(0);
+
+        assertEquals(true, foundTurnover.equals(financialTurnoverTransfer));
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void saveAFinancialTurnoverTransferTypeIntoDatabaseMissingAllField() {
+        AccountingDAO accountingDAO = new AccountingDAO(DB_DRIVER, DB_CONNECTION);
+        List<Turnover> turnoverList = new ArrayList<>();
+        String[] splittedLine = {"", "", "", ""};
+
+        FinancialTurnoverTransfer financialTurnoverTransfer = new FinancialTurnoverTransfer(splittedLine);
+        turnoverList.add(financialTurnoverTransfer);
+        accountingDAO.saveFinancialTurnover(turnoverList);
+
+        Turnover turnover = new FinancialTurnoverTransfer(splittedLine);
+        List<Turnover> turnoverFoundIntoDatabase = accountingDAO.findAll(turnover);
+        Turnover foundTurnover = turnoverFoundIntoDatabase.get(0);
+
+        assertEquals(true, foundTurnover.equals(financialTurnoverTransfer));
+    }
 
     static void createTable(String jdbcDriver, String jdbcUrl, String createTableSql) {
         Connection conn = null;

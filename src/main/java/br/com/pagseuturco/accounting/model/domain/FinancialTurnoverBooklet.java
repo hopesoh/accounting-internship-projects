@@ -1,11 +1,17 @@
 package br.com.pagseuturco.accounting.model.domain;
 
+import br.com.pagseuturco.accounting.model.dao.mapper.BookletSQLMapper;
 import br.com.pagseuturco.accounting.model.dao.mapper.SQLMapper;
+import br.com.pagseuturco.accounting.model.dao.mapper.SQLPagSeuTurcoMapper;
 
 import java.math.BigDecimal;
 import java.util.Objects;
 
 public class FinancialTurnoverBooklet implements Turnover, BookletType {
+
+    private static final BookletSQLMapper BOOKLET_SQL_MAPPER = new BookletSQLMapper();
+    private static final BookletSQLMapper BOOKLET_PAGSEUTURCO_SQL_MAPPER = new BookletSQLMapper();
+
     private String documentNumber;
     private String name;
     private BigDecimal value;
@@ -13,7 +19,7 @@ public class FinancialTurnoverBooklet implements Turnover, BookletType {
     private String date;
     private String identification;
     private String turnoverType = "BOOKLET";
-    private static final BigDecimal BOOKLET_TAX = new BigDecimal(0.25);
+
 
     public FinancialTurnoverBooklet(String[] splittedLine) {
         documentNumber = splittedLine[0];
@@ -63,7 +69,7 @@ public class FinancialTurnoverBooklet implements Turnover, BookletType {
 
     @Override
     public SQLMapper getSQLMapper() {
-        return null;
+        return BOOKLET_SQL_MAPPER;
     }
 
     @Override
@@ -80,4 +86,7 @@ public class FinancialTurnoverBooklet implements Turnover, BookletType {
     public String getIdentification() {
         return identification;
     }
+
+    @Override
+    public SQLPagSeuTurcoMapper getSQLPagSeuTurcoMapper() { return BOOKLET_PAGSEUTURCO_SQL_MAPPER; }
 }

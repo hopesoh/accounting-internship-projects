@@ -14,7 +14,7 @@ public class TransactionAccount {
     private static final String GENNERICCARD_HEADER = "hash_cartao;tipo_transacao;valor;conta;data_transacao";
     private static final String TRANSFER_HEADER = "tipo;valor;conta;data_transacao";
 
-    public List<Turnover> processFile(List<String> fileIntoList) throws IOException, SQLException, ClassNotFoundException {
+    public List<Turnover> processFile(List<String> fileIntoList) {
 
         String turnoverType = identifyTurnoverByType(fileIntoList.get(0));
         List<Turnover> turnoverList = transformIntoTurnoverList(turnoverType, fileIntoList);
@@ -24,7 +24,7 @@ public class TransactionAccount {
 
     public ArrayList<String> transformFileIntoList(Reader reader) throws IOException {
 
-        String fileLine = null;
+        String fileLine;
         ArrayList<String> turnoverArrayList = new ArrayList<String>();
 
         while ((fileLine = ((BufferedReader)reader).readLine()) != null) {
@@ -43,18 +43,18 @@ public class TransactionAccount {
             case TRANSFER_HEADER:
                 return "TRANSFER";
             default:
-                return null;
+                throw new IllegalArgumentException();
         }
     }
 
-    public ArrayList<Turnover> transformIntoTurnoverList(String turnoverType, List<String> fileLines) throws IOException, SQLException, ClassNotFoundException {
+    public ArrayList<Turnover> transformIntoTurnoverList(String turnoverType, List<String> fileLines) {
 
 
         ArrayList<Turnover> turnoverArrayList = new ArrayList<Turnover>();
 
-        for (int index=1; index < fileLines.size(); index++ ) {
+        for (int turnoverIndex=1; turnoverIndex < fileLines.size(); turnoverIndex++ ) {
 
-            String fileLine = fileLines.get(index);
+            String fileLine = fileLines.get(turnoverIndex);
             String[] splittedLine = fileLine.split(SEMICOLON, -1);
 
             if (splittedLine.length == 0) {

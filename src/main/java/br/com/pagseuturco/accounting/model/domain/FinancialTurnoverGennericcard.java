@@ -1,11 +1,16 @@
 package br.com.pagseuturco.accounting.model.domain;
 
+import br.com.pagseuturco.accounting.model.dao.mapper.GennericcardSQLMapper;
 import br.com.pagseuturco.accounting.model.dao.mapper.SQLMapper;
+import br.com.pagseuturco.accounting.model.dao.mapper.SQLPagSeuTurcoMapper;
 
 import java.math.BigDecimal;
 import java.util.Objects;
 
 public class FinancialTurnoverGennericcard implements Turnover, GennericcardType {
+    private static final GennericcardSQLMapper GENNERICCARD_SQL_MAPPER = new GennericcardSQLMapper();
+    private static final GennericcardSQLMapper BOOKLET_PAGSEUTURCO_SQL_MAPPER = new GennericcardSQLMapper();
+
     private String cardsHash;
     private String type;
     private BigDecimal value;
@@ -67,7 +72,7 @@ public class FinancialTurnoverGennericcard implements Turnover, GennericcardType
 
     @Override
     public SQLMapper getSQLMapper() {
-        return null;
+        return GENNERICCARD_SQL_MAPPER;
     }
 
     @Override
@@ -79,4 +84,7 @@ public class FinancialTurnoverGennericcard implements Turnover, GennericcardType
     public String getCardsHash() {
         return cardsHash;
     }
+
+    @Override
+    public SQLPagSeuTurcoMapper getSQLPagSeuTurcoMapper() { return BOOKLET_PAGSEUTURCO_SQL_MAPPER; }
 }
