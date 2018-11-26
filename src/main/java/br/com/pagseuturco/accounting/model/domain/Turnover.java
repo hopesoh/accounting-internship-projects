@@ -14,11 +14,5 @@ public interface Turnover {
 
     BigDecimal getValue();
 
-    @Override
-    boolean equals(Object o);
-
-    @Override
-    int hashCode();
-
     SQLMapper getSQLMapper();
 }

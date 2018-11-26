@@ -26,7 +26,7 @@ public class AccountingController {
         this.accountingDAO = accountingDAO;
     }
 
-    public void accountForTextFiles() throws IOException, SQLException, ClassNotFoundException {
+    public void accountForTextFiles() throws IOException {
 
         Reader financialTurnoverFile = accountingFileReaderView.readFile();
         List<String> fileIntoList = transactionAccount.transformFileIntoList(financialTurnoverFile);
@@ -39,5 +39,4 @@ public class AccountingController {
 
         financialTurnoverFile.close();
     }
-
 }

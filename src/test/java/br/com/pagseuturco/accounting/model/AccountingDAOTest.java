@@ -14,14 +14,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class AccountingDAOTest {
     private static final String DB_DRIVER = "org.h2.Driver";
     private static final String DB_CONNECTION = "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1";
 
-    public static final String CREATE_DATABASE = "create SCHEMA FINANCIAL_TURNOVER;";
-    public static final String CREATE_TABLE_TRANSFER = "create table IF NOT EXISTS FINANCIAL_TURNOVER.transfer( id number, account number not null, value number,  date varchar(20), type varchar(100) )";
-    public static final String CLEAN_TABLE = "DROP table IF EXISTS FINANCIAL_TURNOVER.transfer;";
+    private static final String CREATE_DATABASE = "create SCHEMA FINANCIAL_TURNOVER;";
+    private static final String CREATE_TABLE_TRANSFER = "create table IF NOT EXISTS FINANCIAL_TURNOVER.transfer( id number, account number not null, value number,  date varchar(20), type varchar(100) )";
+    private static final String CLEAN_TABLE = "DROP table IF EXISTS FINANCIAL_TURNOVER.transfer;";
 
 
     @BeforeClass
@@ -49,7 +50,7 @@ public class AccountingDAOTest {
         List<Turnover> turnoverFoundIntoDatabase = accountingDAO.findAll(turnover);
         Turnover foundTurnover = turnoverFoundIntoDatabase.get(0);
 
-        assertEquals(true, foundTurnover.equals(financialTurnoverTransfer));
+        assertEquals(foundTurnover, financialTurnoverTransfer);
     }
 
     @Test(expected = RuntimeException.class)
@@ -66,7 +67,7 @@ public class AccountingDAOTest {
         List<Turnover> turnoverFoundIntoDatabase = accountingDAO.findAll(turnover);
         Turnover foundTurnover = turnoverFoundIntoDatabase.get(0);
 
-        assertEquals(true, foundTurnover.equals(financialTurnoverTransfer));
+        assertEquals(foundTurnover, financialTurnoverTransfer);
     }
 
     @Test
@@ -83,7 +84,7 @@ public class AccountingDAOTest {
         List<Turnover> turnoverFoundIntoDatabase = accountingDAO.findAll(turnover);
         Turnover foundTurnover = turnoverFoundIntoDatabase.get(0);
 
-        assertEquals(true, foundTurnover.equals(financialTurnoverTransfer));
+        assertEquals(foundTurnover, financialTurnoverTransfer);
     }
 
     @Test(expected = RuntimeException.class)
@@ -100,10 +101,10 @@ public class AccountingDAOTest {
         List<Turnover> turnoverFoundIntoDatabase = accountingDAO.findAll(turnover);
         Turnover foundTurnover = turnoverFoundIntoDatabase.get(0);
 
-        assertEquals(true, foundTurnover.equals(financialTurnoverTransfer));
+        assertEquals(foundTurnover, financialTurnoverTransfer);
     }
 
-    static void createTable(String jdbcDriver, String jdbcUrl, String createTableSql) {
+    private static void createTable(String jdbcDriver, String jdbcUrl, String createTableSql) {
         Connection conn = null;
         Statement stmt = null;
         try {

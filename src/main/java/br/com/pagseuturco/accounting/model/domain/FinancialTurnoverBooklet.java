@@ -62,6 +62,7 @@ public class FinancialTurnoverBooklet implements Turnover, BookletType {
         if (obj == null || getClass() != obj.getClass()) return false;
         FinancialTurnoverBooklet turnover = (FinancialTurnoverBooklet) obj;
         return Objects.equals(name, turnover.name) &&
+                Objects.equals(documentNumber,turnover.documentNumber) &&
                 Objects.equals(value, turnover.value) &&
                 Objects.equals(account, turnover.account) &&
                 Objects.equals(date, turnover.date);

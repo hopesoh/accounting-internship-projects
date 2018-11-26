@@ -4,6 +4,7 @@ import br.com.pagseuturco.accounting.model.domain.*;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class FinancialTurnoverFactoryTest {
     @Test
@@ -41,7 +42,7 @@ public class FinancialTurnoverFactoryTest {
         String[] splittedLine = new String[] {"DEBITO", "130.55", "101", "15/08/2018"};
         FinancialTurnoverFactory financialTurnoverFactory = new FinancialTurnoverFactory();
 
-        assertEquals(null, financialTurnoverFactory.build(null, splittedLine));
+        assertNull(financialTurnoverFactory.build(null, splittedLine));
     }
 
     @Test(expected = NullPointerException.class)
@@ -49,6 +50,6 @@ public class FinancialTurnoverFactoryTest {
         String turnoverType = "TRANSFER";
         FinancialTurnoverFactory financialTurnoverFactory = new FinancialTurnoverFactory();
 
-        assertEquals(null, financialTurnoverFactory.build(turnoverType, null));
+        assertNull(financialTurnoverFactory.build(turnoverType, null));
     }
 }

@@ -3,7 +3,6 @@ package br.com.pagseuturco.accounting.model.domain;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,15 +14,11 @@ public class TransactionAccount {
     private static final String TRANSFER_HEADER = "tipo;valor;conta;data_transacao";
 
     public List<Turnover> processFile(List<String> fileIntoList) {
-
-        String turnoverType = identifyTurnoverByType(fileIntoList.get(0));
-        List<Turnover> turnoverList = transformIntoTurnoverList(turnoverType, fileIntoList);
-
-        return turnoverList;
+        String fileType = identifyFileByType(fileIntoList.get(0));
+        return transformFileIntoTurnoverList(fileType, fileIntoList);
     }
 
     public ArrayList<String> transformFileIntoList(Reader reader) throws IOException {
-
         String fileLine;
         ArrayList<String> turnoverArrayList = new ArrayList<String>();
 
@@ -34,7 +29,7 @@ public class TransactionAccount {
         return turnoverArrayList;
     }
 
-    public String identifyTurnoverByType(String header) {
+    public String identifyFileByType(String header) {
         switch (header) {
             case BOOKLET_HEADER:
                 return "BOOKLET";
@@ -47,23 +42,23 @@ public class TransactionAccount {
         }
     }
 
-    public ArrayList<Turnover> transformIntoTurnoverList(String turnoverType, List<String> fileLines) {
+    public ArrayList<Turnover> transformFileIntoTurnoverList(String fileType, List<String> fileLines) {
 
 
-        ArrayList<Turnover> turnoverArrayList = new ArrayList<Turnover>();
+        ArrayList<Turnover> turnoverArrayList = new ArrayList<>();
 
-        for (int turnoverIndex=1; turnoverIndex < fileLines.size(); turnoverIndex++ ) {
+        for(int turnoverIndex=1; turnoverIndex < fileLines.size(); turnoverIndex++ ) {
 
-            String fileLine = fileLines.get(turnoverIndex);
-            String[] splittedLine = fileLine.split(SEMICOLON, -1);
+            try {
+                String fileLine = fileLines.get(turnoverIndex);
+                String[] splittedLine = fileLine.split(SEMICOLON, -1);
 
-            if (splittedLine.length == 0) {
-                return null;
+                FinancialTurnoverFactory financialTurnoverFactory = new FinancialTurnoverFactory();
+                Turnover financialTurnover = financialTurnoverFactory.build(fileType, splittedLine);
+                turnoverArrayList.add(financialTurnover);
+            } catch (Exception ex) {
+                throw new NullPointerException();
             }
-
-            FinancialTurnoverFactory financialTurnoverFactory = new FinancialTurnoverFactory();
-            Turnover financialTurnover = financialTurnoverFactory.build(turnoverType, splittedLine);
-            turnoverArrayList.add(financialTurnover);
         }
 
         return turnoverArrayList;

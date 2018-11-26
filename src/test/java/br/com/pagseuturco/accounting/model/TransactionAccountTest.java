@@ -4,17 +4,16 @@ import br.com.pagseuturco.accounting.model.domain.FinancialTurnoverFactory;
 import br.com.pagseuturco.accounting.model.domain.FinancialTurnoverTransfer;
 import br.com.pagseuturco.accounting.model.domain.TransactionAccount;
 import br.com.pagseuturco.accounting.model.domain.Turnover;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class TransactionAccountTest {
     @Test
@@ -41,7 +40,7 @@ public class TransactionAccountTest {
         final String transferHeader = "tipo;valor;conta;data_transacao";
 
         TransactionAccount account = new TransactionAccount();
-        assertEquals("TRANSFER", account.identifyTurnoverByType(transferHeader));
+        assertEquals("TRANSFER", account.identifyFileByType(transferHeader));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -49,7 +48,7 @@ public class TransactionAccountTest {
         final String transferHeader = "tipo;valor_movimentacao;conta;data_transacao";
 
         TransactionAccount account = new TransactionAccount();
-        assertEquals(null, account.identifyTurnoverByType(transferHeader));
+        assertNull(account.identifyFileByType(transferHeader));
     }
 
     @Test
@@ -66,7 +65,7 @@ public class TransactionAccountTest {
         Turnover financialTurnover = financialTurnoverFactory.build(turnoverType,splittedLine);
         expectedData.add(financialTurnover);
 
-        assertEquals(expectedData, account.transformIntoTurnoverList(turnoverType, financialTurnoverDocument));
+        assertEquals(expectedData, account.transformFileIntoTurnoverList(turnoverType, financialTurnoverDocument));
     }
 
     @Test
@@ -83,7 +82,7 @@ public class TransactionAccountTest {
         Turnover financialTurnover = financialTurnoverFactory.build(turnoverType,splittedLine);
         expectedData.add(financialTurnover);
 
-        assertEquals(expectedData, account.transformIntoTurnoverList(turnoverType, financialTurnoverDocument));
+        assertEquals(expectedData, account.transformFileIntoTurnoverList(turnoverType, financialTurnoverDocument));
     }
 
     @Test
@@ -100,11 +99,11 @@ public class TransactionAccountTest {
         Turnover financialTurnover = financialTurnoverFactory.build(turnoverType,splittedLine);
         expectedData.add(financialTurnover);
 
-        assertEquals(expectedData, account.transformIntoTurnoverList(turnoverType, financialTurnoverDocument));
+        assertEquals(expectedData, account.transformFileIntoTurnoverList(turnoverType, financialTurnoverDocument));
     }
 
     @Test
-    public void processFileTransferTypeIntoTurnoverList() throws SQLException, IOException, ClassNotFoundException {
+    public void processFileTransferTypeIntoTurnoverList() {
         List<String> fileIntoList = new ArrayList<>();
         fileIntoList.add("tipo;valor;conta;data_transacao");
         fileIntoList.add("DEBITO;130.55;101;15/08/2018");
@@ -112,21 +111,21 @@ public class TransactionAccountTest {
 
         List<Turnover> expectedData;
         String turnoverType = "TRANSFER";
-        expectedData = account.transformIntoTurnoverList(turnoverType,fileIntoList);
+        expectedData = account.transformFileIntoTurnoverList(turnoverType,fileIntoList);
 
         assertEquals(expectedData, account.processFile(fileIntoList));
 
     }
 
     @Test
-    public void processFileMissingAllFields() throws SQLException, IOException, ClassNotFoundException {
+    public void processFileMissingAllFields() {
         List<String> fileIntoList = new ArrayList<>();
         fileIntoList.add("tipo;valor;conta;data_transacao");
         fileIntoList.add(";;;");
         TransactionAccount account = new TransactionAccount();
 
         String turnoverType = "TRANSFER";
-        List<Turnover> expectedData = account.transformIntoTurnoverList(turnoverType,fileIntoList);
+        List<Turnover> expectedData = account.transformFileIntoTurnoverList(turnoverType,fileIntoList);
 
         assertEquals(expectedData, account.processFile(fileIntoList));
 
@@ -146,19 +145,16 @@ public class TransactionAccountTest {
         FinancialTurnoverTransfer financialTurnoverTransfer = new FinancialTurnoverTransfer(splittedLine);
         expectedData.add(financialTurnoverTransfer);
 
-        assertEquals(expectedData, account.transformIntoTurnoverList(turnoverType,fileIntoList));
+        assertEquals(expectedData, account.transformFileIntoTurnoverList(turnoverType,fileIntoList));
 
     }
 
     @Test(expected = NullPointerException.class)
     public void transformIntoTurnoverListEnterANullListExpectedNullReturn() {
-        List<String> fileIntoList = null;
         String turnoverType = "TRANSFER";
         TransactionAccount account = new TransactionAccount();
 
-        List<Turnover> expectedData = null;
-
-        assertEquals(expectedData, account.transformIntoTurnoverList(turnoverType,fileIntoList));
+        assertNull(account.transformFileIntoTurnoverList(turnoverType, null));
     }
 
     @Test
@@ -168,7 +164,7 @@ public class TransactionAccountTest {
 
         String turnoverType = "GENNERICCARD";
 
-        assertEquals(turnoverType, account.identifyTurnoverByType(gennericcardHeader));
+        assertEquals(turnoverType, account.identifyFileByType(gennericcardHeader));
 
     }
 
@@ -177,9 +173,7 @@ public class TransactionAccountTest {
         String indeterminatedHeader = "tipo;nome;conta;data_transacao";
         TransactionAccount account = new TransactionAccount();
 
-        String turnoverType = null;
-
-        assertEquals(turnoverType, account.identifyTurnoverByType(indeterminatedHeader));
+        assertNull(account.identifyFileByType(indeterminatedHeader));
 
     }
 }
