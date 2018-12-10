@@ -1,0 +1,6 @@
+create database financial_turnover;
+use financial_turnover;
+create table transfer(id int not null auto_increment, account int not null, value float not null, type varchar(10), date varchar(10), primary key(id));
+create table gennericcard(id int not null auto_increment, cardsHash varchar(50), type varchar(10), value float not null, account int not null, date varchar(10), primary key(id));
+create table pagseuturco_account(id int not null auto_increment, account int not null, value float not null, type varchar(20), date varchar(10), primary key(id));
+create table booklet(id int not null auto_increment, name varchar(30), documentNumber varchar(30), value float not null, account int not null, date varchar(10), primary key(id));
