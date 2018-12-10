@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GennericcardSQLMapper implements SQLMapper, SQLPagSeuTurcoMapper {
-    private static String INSERT_QUERY = "insert into financial_turnover.gennericcard(id,cardhash,type,value,account,date) values(default,?,?,?,?,?)";
+    private static String INSERT_QUERY = "insert into financial_turnover.gennericcard(id,cardsHash,type,value,account,date) values(default,?,?,?,?,?)";
     private static String SELECT_QUERY = "select * from financial_turnover.gennericcard;";
     private static String PAGSEUTURCO_INSERT_QUERY = "insert into financial_turnover.pagseuturco_account(id,account,value,type,date) values(default,?,?,?,?)";
     private static final BigDecimal CREDIT_TAX = new BigDecimal(0.02);

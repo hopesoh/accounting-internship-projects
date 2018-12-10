@@ -10,7 +10,7 @@ import java.util.List;
 
 public class BookletSQLMapper implements SQLMapper, SQLPagSeuTurcoMapper {
     private static final BigDecimal BOOKLET_TAX = new BigDecimal(0.25);
-    private static String INSERT_QUERY = "insert into financial_turnover.booklet(id,name,identification,value,account,date) values(default,?,?,?,?,?)";
+    private static String INSERT_QUERY = "insert into financial_turnover.booklet(id,name,documentNumber,value,account,date) values(default,?,?,?,?,?)";
     private static String SELECT_QUERY = "select * from financial_turnover.booklet;";
     private static String PAGSEUTURCO_INSERT_QUERY = "insert into financial_turnover.pagseuturco_account(id,account,value,type,date) values(default,?,?,?,?)";
 
@@ -22,7 +22,7 @@ public class BookletSQLMapper implements SQLMapper, SQLPagSeuTurcoMapper {
             FinancialTurnoverBooklet booklet = (FinancialTurnoverBooklet) turnover;
             PreparedStatement preparedStatement = connect.prepareStatement(INSERT_QUERY);
             preparedStatement.setString(1, booklet.getName());
-            preparedStatement.setString(2, booklet.getIdentification());
+            preparedStatement.setString(2, booklet.getDocumentNumber());
             preparedStatement.setBigDecimal(3, bookletValueSubtractTax);
             preparedStatement.setInt(4, booklet.getAccount());
             preparedStatement.setString(5, booklet.getDate());
@@ -42,12 +42,12 @@ public class BookletSQLMapper implements SQLMapper, SQLPagSeuTurcoMapper {
             List<Turnover> turnoverArrayList = new ArrayList<>();
             while (resultSet.next()) {
                 String name = resultSet.getString("name");
-                String identification = resultSet.getString("type");
+                String documentNumber = resultSet.getString("type");
                 String value = (resultSet.getBigDecimal("value")).toString();
                 String account = Integer.toString(resultSet.getInt("account"));
                 String date = resultSet.getString("date");
 
-                String[] splittedLine = new String[]{name, identification, value, account, date};
+                String[] splittedLine = new String[]{name, documentNumber, value, account, date};
                 Turnover financialTurnoverBooklet = new FinancialTurnoverBooklet(splittedLine);
                 turnoverArrayList.add(financialTurnoverBooklet);
             }

@@ -32,7 +32,8 @@ public class AccountingDAO {
                 insertPreparedStatement.executeUpdate();
 
                 if (turnover instanceof ProfitInserter) {
-                    ((ProfitInserter) turnover).getSQLPagSeuTurcoMapper().createInsertPagSeuTurcoPreparedStatement(connect, turnover);
+                    PreparedStatement preparedStatement = ((ProfitInserter) turnover).getSQLPagSeuTurcoMapper().createInsertPagSeuTurcoPreparedStatement(connect, turnover);
+                    preparedStatement.executeUpdate();
                 }
             }
         } catch (Exception e) {

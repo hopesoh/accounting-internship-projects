@@ -1,3 +1,4 @@
+set @@global.time_zone = '-1:00';
 create database financial_turnover;
 use financial_turnover;
 create table transfer(id int not null auto_increment, account int not null, value float not null, type varchar(10), date varchar(10), primary key(id));
